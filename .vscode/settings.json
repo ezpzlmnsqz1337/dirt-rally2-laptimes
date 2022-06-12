@@ -1,0 +1,15 @@
+{
+    "eslint.validate": [
+        "vue",
+        "javascript",
+        "javascriptreact"
+      ],
+      "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+      },
+      "path-intellisense.mappings": {
+        "@": "${workspaceRoot}/src"
+      },
+      "editor.formatOnSave": false,
+      "vetur.validation.style": false
+}
