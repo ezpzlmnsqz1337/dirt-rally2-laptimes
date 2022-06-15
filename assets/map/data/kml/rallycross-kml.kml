@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Rallycross</name>
+    <Style id="icon-1899-A52714-labelson-nodesc">
+      <IconStyle>
+        <color>ff1427a5</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="icon-1899-C2185B-labelson-nodesc">
+      <IconStyle>
+        <color>ff5b18c2</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Placemark>
+      <name>Bikernieku, Latvia</name>
+      <styleUrl>#icon-1899-C2185B-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          24.2223543,56.9696578,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Höljes, Sweden</name>
+      <styleUrl>#icon-1899-C2185B-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          12.5544663,60.9184764,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Estering, Germany</name>
+      <styleUrl>#icon-1899-C2185B-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          9.6916771,53.4490615,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Silverstone, England</name>
+      <styleUrl>#icon-1899-C2185B-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          -1.0151708,52.0724484,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Lohéac, Bretagne, France</name>
+      <styleUrl>#icon-1899-C2185B-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          -1.8982078,47.8638383,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Circuit de Barcelona-Catalunya, Spain</name>
+      <styleUrl>#icon-1899-C2185B-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          2.2571831,41.5697046,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Montalegre, Portugal</name>
+      <styleUrl>#icon-1899-C2185B-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          -7.7576503,41.8467473,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Hell, Norway</name>
+      <styleUrl>#icon-1899-C2185B-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          10.9197963,63.405601,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Lydden Hill, England</name>
+      <styleUrl>#icon-1899-C2185B-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          1.1979534,51.1784548,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Mettet, Belgium</name>
+      <styleUrl>#icon-1899-C2185B-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          4.6497682,50.3009628,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Yas Marina Circuit, Abu Dhabi</name>
+      <styleUrl>#icon-1899-C2185B-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          54.6049215,24.4740753,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Trois-Rivières, Canada</name>
+      <styleUrl>#icon-1899-C2185B-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          -72.5592824,46.3464988,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>DirtFish</name>
+      <styleUrl>#icon-1899-A52714-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          -121.8139684,47.5389919,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Killarney International Raceway, South Africa </name>
+      <styleUrl>#icon-1899-C2185B-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          18.5281471,-33.8223244,0
+        </coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

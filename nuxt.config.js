@@ -25,6 +25,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    { src: './plugins/gmap-vue.js', mode: 'client' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -80,5 +81,17 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-  }
+    extend (config) {
+      config.module.rules.push({
+        test: /\.km[zl]$/,
+        loader: 'url-loader'
+      })
+      config.module.rules.push({
+        test: /\.geojson$/,
+        loader: 'json-loader'
+      })
+    }
+  },
+
+  transpile: [/^gmap-vue($|\/)/]
 }

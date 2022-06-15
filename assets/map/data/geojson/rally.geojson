@@ -1,0 +1,20 @@
+{
+"type": "FeatureCollection",
+"name": "Rally",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "Ribadelles, Spain", "description": null }, "geometry": { "type": "Point", "coordinates": [ 0.6908422, 41.1868075 ] } },
+{ "type": "Feature", "properties": { "Name": "Łęczna county, Poland", "description": null }, "geometry": { "type": "Point", "coordinates": [ 21.8023804, 53.9195587 ] } },
+{ "type": "Feature", "properties": { "Name": "Monte Carlo, Monaco", "description": null }, "geometry": { "type": "Point", "coordinates": [ 7.3819723, 43.9880907 ] } },
+{ "type": "Feature", "properties": { "Name": "Värmland, Sweden", "description": null }, "geometry": { "type": "Point", "coordinates": [ 13.2888603, 60.038297 ] } },
+{ "type": "Feature", "properties": { "Name": "Jämsä, Finland - Rally", "description": null }, "geometry": { "type": "Point", "coordinates": [ 25.0433075, 61.7646777 ] } },
+{ "type": "Feature", "properties": { "Name": "Baumholder, Germany", "description": null }, "geometry": { "type": "Point", "coordinates": [ 7.3315651, 49.648893 ] } },
+{ "type": "Feature", "properties": { "Name": "Powys, Wales", "description": null }, "geometry": { "type": "Point", "coordinates": [ -3.7057154, 52.4492857 ] } },
+{ "type": "Feature", "properties": { "Name": "Agrolis, Greece", "description": null }, "geometry": { "type": "Point", "coordinates": [ 22.5409777, 37.7747883 ] } },
+{ "type": "Feature", "properties": { "Name": "Perth and Kinoss, Scotland", "description": "Need to specify the location" }, "geometry": { "type": "Point", "coordinates": [ -3.6604991, 56.6215644 ] } },
+{ "type": "Feature", "properties": { "Name": "New England, United States", "description": null }, "geometry": { "type": "Point", "coordinates": [ -121.7244379, 47.5975051 ] } },
+{ "type": "Feature", "properties": { "Name": "Catamarca Province, Argentina", "description": null }, "geometry": { "type": "Point", "coordinates": [ -64.726425, -31.5792556 ] } },
+{ "type": "Feature", "properties": { "Name": "Monaro, Australia", "description": null }, "geometry": { "type": "Point", "coordinates": [ 152.8293933, -30.6879373 ] } },
+{ "type": "Feature", "properties": { "Name": "Hawkes Bay, New Zealand", "description": null }, "geometry": { "type": "Point", "coordinates": [ 174.798115200000012, -37.8846745 ] } }
+]
+}

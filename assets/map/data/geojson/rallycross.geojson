@@ -1,0 +1,21 @@
+{
+"type": "FeatureCollection",
+"name": "Rallycross",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "Bikernieku, Latvia", "description": null }, "geometry": { "type": "Point", "coordinates": [ 24.2223543, 56.9696578 ] } },
+{ "type": "Feature", "properties": { "Name": "Höljes, Sweden", "description": null }, "geometry": { "type": "Point", "coordinates": [ 12.5544663, 60.9184764 ] } },
+{ "type": "Feature", "properties": { "Name": "Estering, Germany", "description": null }, "geometry": { "type": "Point", "coordinates": [ 9.6916771, 53.4490615 ] } },
+{ "type": "Feature", "properties": { "Name": "Silverstone, England", "description": null }, "geometry": { "type": "Point", "coordinates": [ -1.0151708, 52.0724484 ] } },
+{ "type": "Feature", "properties": { "Name": "Lohéac, Bretagne, France", "description": null }, "geometry": { "type": "Point", "coordinates": [ -1.8982078, 47.8638383 ] } },
+{ "type": "Feature", "properties": { "Name": "Circuit de Barcelona-Catalunya, Spain", "description": null }, "geometry": { "type": "Point", "coordinates": [ 2.2571831, 41.5697046 ] } },
+{ "type": "Feature", "properties": { "Name": "Montalegre, Portugal", "description": null }, "geometry": { "type": "Point", "coordinates": [ -7.7576503, 41.8467473 ] } },
+{ "type": "Feature", "properties": { "Name": "Hell, Norway", "description": null }, "geometry": { "type": "Point", "coordinates": [ 10.9197963, 63.405601 ] } },
+{ "type": "Feature", "properties": { "Name": "Lydden Hill, England", "description": null }, "geometry": { "type": "Point", "coordinates": [ 1.1979534, 51.1784548 ] } },
+{ "type": "Feature", "properties": { "Name": "Mettet, Belgium", "description": null }, "geometry": { "type": "Point", "coordinates": [ 4.6497682, 50.3009628 ] } },
+{ "type": "Feature", "properties": { "Name": "Yas Marina Circuit, Abu Dhabi", "description": null }, "geometry": { "type": "Point", "coordinates": [ 54.6049215, 24.4740753 ] } },
+{ "type": "Feature", "properties": { "Name": "Trois-Rivières, Canada", "description": null }, "geometry": { "type": "Point", "coordinates": [ -72.5592824, 46.3464988 ] } },
+{ "type": "Feature", "properties": { "Name": "DirtFish", "description": null }, "geometry": { "type": "Point", "coordinates": [ -121.8139684, 47.5389919 ] } },
+{ "type": "Feature", "properties": { "Name": "Killarney International Raceway, South Africa ", "description": null }, "geometry": { "type": "Point", "coordinates": [ 18.5281471, -33.8223244 ] } }
+]
+}

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Rally</name>
+    <Style id="icon-1899-0288D1-labelson">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+    </Style>
+    <Style id="icon-1899-0288D1-labelson-nodesc">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Placemark>
+      <name>Ribadelles, Spain</name>
+      <styleUrl>#icon-1899-0288D1-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          0.6908422,41.1868075,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Łęczna county, Poland</name>
+      <styleUrl>#icon-1899-0288D1-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          21.8023804,53.9195587,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Monte Carlo, Monaco</name>
+      <styleUrl>#icon-1899-0288D1-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          7.3819723,43.9880907,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Värmland, Sweden</name>
+      <styleUrl>#icon-1899-0288D1-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          13.2888603,60.038297,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Jämsä, Finland - Rally</name>
+      <styleUrl>#icon-1899-0288D1-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          25.0433075,61.7646777,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Baumholder, Germany</name>
+      <styleUrl>#icon-1899-0288D1-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          7.3315651,49.648893,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Powys, Wales</name>
+      <styleUrl>#icon-1899-0288D1-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          -3.7057154,52.4492857,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Agrolis, Greece</name>
+      <styleUrl>#icon-1899-0288D1-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          22.5409777,37.7747883,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Perth and Kinoss, Scotland</name>
+      <description>Need to specify the location</description>
+      <styleUrl>#icon-1899-0288D1-labelson</styleUrl>
+      <Point>
+        <coordinates>
+          -3.6604991,56.6215644,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>New England, United States</name>
+      <styleUrl>#icon-1899-0288D1-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          -121.7244379,47.5975051,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Catamarca Province, Argentina</name>
+      <styleUrl>#icon-1899-0288D1-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          -64.726425,-31.5792556,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Monaro, Australia</name>
+      <styleUrl>#icon-1899-0288D1-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          152.8293933,-30.6879373,0
+        </coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Hawkes Bay, New Zealand</name>
+      <styleUrl>#icon-1899-0288D1-labelson-nodesc</styleUrl>
+      <Point>
+        <coordinates>
+          174.7981152,-37.8846745,0
+        </coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

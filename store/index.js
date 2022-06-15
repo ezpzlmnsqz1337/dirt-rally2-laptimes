@@ -1,18 +1,33 @@
 export const state = () => ({
-  list: []
+  locations: [],
+  stages: [],
+  activeLocation: null,
+  activeStage: null,
+  rightPanelShow: false,
+  leftPanelShow: true
 })
 
 export const mutations = {
-  add (state, text) {
-    state.list.push({
-      text,
-      done: false
-    })
+  showRightPanel (state, show) {
+    if (!show) { return }
+    state.rightPanelShow = show
   },
-  remove (state, { todo }) {
-    state.list.splice(state.list.indexOf(todo), 1)
+  showLeftPanel (state, show) {
+    if (!show) { return }
+    state.leftPanelShow = show
   },
-  toggle (state, todo) {
-    todo.done = !todo.done
+  addStage (state, stage) {
+    if (!stage) { return }
+    state.stages.push(stage)
+  },
+  addLocation (state, location) {
+    if (!location) { return }
+    state.locations.push(location)
+  },
+  setActiveLocation (state, location) {
+    state.activeLocation = location
+  },
+  setActiveStage (state, stage) {
+    state.activeStage = stage
   }
 }
