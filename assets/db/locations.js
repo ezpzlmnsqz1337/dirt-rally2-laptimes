@@ -1,4 +1,4 @@
-export const tracks = {
+export const locations = {
   rally: [
     {
       location: 'Catamarca Province, Argentina',
@@ -77,7 +77,7 @@ export const tracks = {
       ]
     },
     {
-      location: 'New England, USA',
+      location: 'New England, United States',
       forward: [
         { name: 'Beaver Creek Trail', lengthKm: '12.86' },
         { name: 'North Fork Pass', lengthKm: '12.50' },
@@ -153,7 +153,7 @@ export const tracks = {
       ]
     },
     {
-      location: 'Germany, Baumholder',
+      location: 'Baumholder, Germany',
       forward: [
         { name: 'Oberstein', lengthKm: '11.67' },
         { name: 'Hammerstein', lengthKm: '10.81' },

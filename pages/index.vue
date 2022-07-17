@@ -31,6 +31,7 @@ export default {
 
 .__wrapper, .__background {
   font-family: 'Inter', sans-serif;
+  color: white;
   width: 100%;
   height: 100%;
 }

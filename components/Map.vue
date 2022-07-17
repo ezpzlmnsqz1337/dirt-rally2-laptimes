@@ -4,6 +4,7 @@
       ref="mapRef"
       :center="{ lat: 30, lng: 35 }"
       :zoom="2.5"
+      :options="{disableDefaultUI: true, minZoom: 2.5}"
       map-type-id="satellite"
       class="__map"
     >
@@ -74,45 +75,54 @@ export default {
     },
     ...mapState(['stages', 'locations', 'activeLocation', 'activeStage'])
   },
+  watch: {
+    // whenever question changes, this function will run
+    activeLocation (newLocation, _oldLocation) {
+      if (newLocation) {
+        this.showRightPanel(true)
+        this.map.panTo({ ...newLocation.coordinates, zoom: 12 })
+        setTimeout(() => {
+          this.map.setZoom(ZOOM_LEVEL_SELECTED)
+        }, 1000)
+      }
+    },
+    activeStage (newStage, _oldStage) {
+      if (newStage) {
+        this.showRightPanel(true)
+        this.map.panTo({ ...this.activeStageCoordinates, zoom: 12 })
+        setTimeout(() => this.map.setZoom(ZOOM_LEVEL_SELECTED), 1000)
+      }
+    }
+  },
   mounted () {
-    const rally = require('@/assets/map/data/geojson/rally.geojson')
-    const rallycross = require('@/assets/map/data/geojson/rallycross.geojson')
-    const rallyStages = require('@/assets/map/data/geojson/rally-stages.geojson')
+    setTimeout(() => {
+      this.$refs.mapRef.$mapPromise.then(map => (this.map = map))
 
-    this.addFeatures(...rally.features, ...rallyStages.features)
+      const rally = require('@/assets/map/data/geojson/rally.geojson')
+      const rallycross = require('@/assets/map/data/geojson/rallycross.geojson')
+      const rallyStages = require('@/assets/map/data/geojson/rally-stages.geojson')
+
+      this.addFeatures(...rally.features, ...rallyStages.features)
+    }, 2000)
   },
   methods: {
-    ...mapMutations(['showRightPanel', 'addLocation', 'addStage', 'setActiveStage', 'setActiveLocation']),
+    ...mapMutations(['showRightPanel', 'addLocation', 'addStage', 'setActiveStage', 'setActiveLocation', 'setMap']),
     addFeatures (...features) {
       features.forEach(({ geometry, properties }) => {
         if (geometry.type === 'Point') {
           const [lng, lat] = geometry.coordinates
-          this.addLocation({ name: properties.Name, description: properties.description, coordinates: { lat, lng } })
+          this.addLocation({ name: properties.name, description: properties.description, countryCode: properties.countryCode, coordinates: { lat, lng } })
         } else if (geometry.type === 'LineString') {
           const coordinates = geometry.coordinates.map(([lng, lat]) => ({ lat, lng }))
-          this.addStage({ name: properties.Name, description: properties.description, coordinates })
+          // this.addStage({ name: properties.name, description: properties.description, coordinates })
         }
       })
     },
     markerClick (location) {
-      this.setActiveStage(null)
       this.setActiveLocation(location)
-      this.$refs.mapRef.$mapPromise.then((map) => {
-        window.myMap = map
-        map.panTo({ ...location.coordinates, zoom: 12 })
-        setTimeout(() => {
-          map.setZoom(ZOOM_LEVEL_SELECTED)
-          this.showRightPanel(true)
-        }, 1000)
-      })
     },
     stageClick (stage) {
-      this.setActiveLocation(null)
       this.setActiveStage(stage)
-      this.$refs.mapRef.$mapPromise.then((map) => {
-        map.panTo({ ...this.activeStageCoordinates, zoom: 12 })
-        setTimeout(() => map.setZoom(ZOOM_LEVEL_SELECTED), 1000)
-      })
     },
     stageMouseover (stage) {
       this.hoverStage = stage
