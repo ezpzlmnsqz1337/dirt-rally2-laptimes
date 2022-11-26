@@ -1,7 +1,9 @@
 export const locations = {
   rally: [
     {
-      location: 'Catamarca Province, Argentina',
+      name: 'Catamarca Province, Argentina',
+      countryCode: 'ar',
+      coordinates: { lng: -64.726425, lat: -31.5792556 },
       forward: [
         { name: 'Las Juntas', lengthKm: '8.25' },
         { name: 'Valle de los puentes', lengthKm: '7.98' },
@@ -20,7 +22,9 @@ export const locations = {
       ]
     },
     {
-      location: 'Monaro, Australia',
+      name: 'Monaro, Australia',
+      countryCode: 'au',
+      coordinates: { lng: 152.8293933, lat: -30.6879373 },
       forward: [
         { name: 'Mount Kaye Pass', lengthKm: '12.50' },
         { name: 'Chandlers Creek', lengthKm: '12.34' },
@@ -39,7 +43,9 @@ export const locations = {
       ]
     },
     {
-      location: 'Hawkes Bay, New Zealand',
+      name: 'Hawkes Bay, New Zealand',
+      countryCode: 'nz',
+      coordinates: { lng: 174.798115200000012, lat: -37.8846745 },
       forward: [
         { name: 'Waimarama Point', lengthKm: '16.06' },
         { name: 'Te Awanga', lengthKm: '11.48' },
@@ -58,7 +64,9 @@ export const locations = {
       ]
     },
     {
-      location: 'Ribadelles, Spain',
+      name: 'Ribadelles, Spain',
+      countryCode: 'es',
+      coordinates: { lng: 0.6908422, lat: 41.1868075 },
       forward: [
         { name: 'Comienzo De Bellriu', lengthKm: '14.34' },
         { name: 'Centenera', lengthKm: '10.57' },
@@ -77,7 +85,9 @@ export const locations = {
       ]
     },
     {
-      location: 'New England, United States',
+      name: 'New England, United States',
+      countryCode: 'us',
+      coordinates: { lng: -121.7244379, lat: 47.5975051 },
       forward: [
         { name: 'Beaver Creek Trail', lengthKm: '12.86' },
         { name: 'North Fork Pass', lengthKm: '12.50' },
@@ -96,7 +106,9 @@ export const locations = {
       ]
     },
     {
-      location: 'Łęczna County, Poland',
+      name: 'Łęczna County, Poland',
+      countryCode: 'pl',
+      coordinates: { lng: 21.8023804, lat: 53.9195587 },
       forward: [
         { name: 'Zaróbka', lengthKm: '16.46' },
         { name: 'Zienki', lengthKm: '13.42' },
@@ -115,7 +127,9 @@ export const locations = {
       ]
     },
     {
-      location: 'Monte Carlo, Monaco',
+      name: 'Monte Carlo, Monaco',
+      countryCode: 'mc',
+      coordinates: { lng: 7.3819723, lat: 43.9880907 },
       forward: [
         { name: 'Vallée descendante', lengthKm: '10.87' },
         { name: 'Pra d’Alart', lengthKm: '9.83' },
@@ -134,7 +148,9 @@ export const locations = {
       ]
     },
     {
-      location: 'Värmland, Sweden',
+      name: 'Värmland, Sweden',
+      countryCode: 'se',
+      coordinates: { lng: 13.2888603, lat: 60.038297 },
       forward: [
         { name: 'Hamra', lengthKm: '12.34' },
         { name: 'Ransbysäter', lengthKm: '11.98' },
@@ -153,7 +169,9 @@ export const locations = {
       ]
     },
     {
-      location: 'Baumholder, Germany',
+      name: 'Baumholder, Germany',
+      countryCode: 'de',
+      coordinates: { lng: 7.3315651, lat: 49.648893 },
       forward: [
         { name: 'Oberstein', lengthKm: '11.67' },
         { name: 'Hammerstein', lengthKm: '10.81' },
@@ -172,7 +190,9 @@ export const locations = {
       ]
     },
     {
-      location: 'Jämsä, Finland',
+      name: 'Jämsä, Finland',
+      countryCode: 'fi',
+      coordinates: { lng: 25.0433075, lat: 61.7646777 },
       forward: [
         { name: 'Kakaristo', lengthKm: '16.20' },
         { name: 'Kontinjärvi', lengthKm: '15.05' },
@@ -191,7 +211,9 @@ export const locations = {
       ]
     },
     {
-      location: 'Argolis, Greece',
+      name: 'Argolis, Greece',
+      countryCode: 'gr',
+      coordinates: { lng: 22.5409777, lat: 37.7747883 },
       forward: [
         { name: 'Anodou Farmakas', lengthKm: '9.60' },
         { name: 'Pomona Érixi', lengthKm: '5.09' },
@@ -210,7 +232,9 @@ export const locations = {
       ]
     },
     {
-      location: 'Powys, Wales',
+      name: 'Powys, Wales',
+      countryCode: 'gb-wls',
+      coordinates: { lng: -3.7057154, lat: 52.4492857 },
       forward: [
         { name: 'River Severn Valley', lengthKm: '11.40' },
         { name: 'Sweet Lamb', lengthKm: '9.90' },
@@ -229,7 +253,9 @@ export const locations = {
       ]
     },
     {
-      location: 'Perth and Kinross, Scotland',
+      name: 'Perth and Kinross, Scotland',
+      countryCode: 'gb-sct',
+      coordinates: { lng: -3.6604991, lat: 56.6215644 },
       forward: [
         { name: 'Newhouse Bridge', lengthKm: '12.86' },
         { name: 'South Morningside', lengthKm: '12.58' },
@@ -249,18 +275,18 @@ export const locations = {
     }
   ],
   rallycross: [
-    { location: 'Yas Marina Circuit, Abu Dhabi, UAE (DLC)' },
-    { location: 'Mettet, Belgium' },
-    { location: 'Trois-Rivières, Canada' },
-    { location: 'Silverstone, England' },
-    { location: 'Lydden Hill, England (DLC)' },
-    { location: 'Lohéac, Bretagne, France' },
-    { location: 'Estering, Germany (DLC)' },
-    { location: 'Biķernieki, Latvia (DLC)' },
-    { location: 'Hell, Norway' },
-    { location: 'Montalegre, Portugal' },
-    { location: 'Killarney International Raceway, South Africa (DLC)' },
-    { location: 'Circuit de Barcelona-Catalunya, Spain' },
-    { location: 'Höljes, Sweden' }
+    { name: 'Yas Marina Circuit, Abu Dhabi, UAE (DLC)' },
+    { name: 'Mettet, Belgium' },
+    { name: 'Trois-Rivières, Canada' },
+    { name: 'Silverstone, England' },
+    { name: 'Lydden Hill, England (DLC)' },
+    { name: 'Lohéac, Bretagne, France' },
+    { name: 'Estering, Germany (DLC)' },
+    { name: 'Biķernieki, Latvia (DLC)' },
+    { name: 'Hell, Norway' },
+    { name: 'Montalegre, Portugal' },
+    { name: 'Killarney International Raceway, South Africa (DLC)' },
+    { name: 'Circuit de Barcelona-Catalunya, Spain' },
+    { name: 'Höljes, Sweden' }
   ]
 }

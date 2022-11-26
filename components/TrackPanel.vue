@@ -1,9 +1,9 @@
 <template>
   <div class="__trackPanel">
     <h2 class="__heading">
-      Locations
+      {{ activeLocation ? 'Stages' : 'Locations' }}
     </h2>
-    <div v-show="locationsShow" class="__locations">
+    <div v-if="!activeLocation" class="__locations">
       <div
         v-for="(l, index) in locations"
         :key="`location-${index}`"
@@ -12,6 +12,24 @@
         @click="setActiveLocation(l)"
       >
         <div>{{ l.name }}</div> <div><span :class="`fp fp-lg ${l.countryCode}`" /></div>
+      </div>
+    </div>
+    <div v-if="activeLocation" class="__stages">
+      <div class="__back">
+        <button @click="setActiveLocation(null)">
+          &lt; Back
+        </button>
+        <div>{{ activeLocation.name }}</div>
+        <div><span :class="`fp fp-lg ${activeLocation.countryCode}`" /></div>
+      </div>
+      <div
+        v-for="(s, index) in activeLocation.forward"
+        :key="`stage-${index}`"
+        class="__item stage"
+        :class="{__active: isActiveStage(l)}"
+        @click="setActiveStage(l)"
+      >
+        <div>{{ s.name }}</div> <div>{{ s.lengthKm }}km</div>
       </div>
     </div>
   </div>
@@ -39,7 +57,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .__trackPanel {
   background-color: rgba(31, 31, 31, 0.7);
   width: 30vw;
@@ -67,15 +85,15 @@ export default {
   background-color: #a4a4a5;
   padding: 0.5rem 1rem;
   border-radius: 0.3rem;
-}
 
-.__btn:hover {
-  background-color: #0045e0;
-  cursor: pointer;
-}
+  &:hover {
+    background-color: #0045e0;
+    cursor: pointer;
+  }
 
-.__btn.__active {
-  background-color: #0045e0;
+  &.__active {
+    background-color: #0045e0;
+  }
 }
 
 h2 {
@@ -88,21 +106,44 @@ h2 {
   font-size: 1rem;
   border-radius: 0.3rem;
   background-color: #777777;
-}
 
-.__item.__active {
-  background-color: #0045E0;
-}
+  &:hover {
+    cursor: pointer;
+    background-color: #0045e0;
+  }
 
-.__item:hover {
-  cursor: pointer;
-  background-color: #0045e0;
+  &.__active {
+    background-color: #0045E0;
+  }
 }
 
 .__location {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.__back {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  button {
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.3rem;
+    background-color: #777777;
+
+    &:hover {
+      cursor: pointer;
+      background-color: #0045e0;
+    }
+
+    &.__active {
+      background-color: #0045E0;
+    }
+  }
 }
 
 </style>

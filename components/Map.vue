@@ -68,15 +68,9 @@ export default {
   },
   computed: {
     google: getGoogleMapsAPI,
-    activeStageCoordinates () {
-      if (!this.activeStage) { return { lat: 0, lng: 0 } }
-      const coords = this.activeStage.coordinates
-      return coords[Math.round(coords.length / 2)]
-    },
     ...mapState(['stages', 'locations', 'activeLocation', 'activeStage'])
   },
   watch: {
-    // whenever question changes, this function will run
     activeLocation (newLocation, _oldLocation) {
       if (newLocation) {
         this.showRightPanel(true)
@@ -85,37 +79,17 @@ export default {
           this.map.setZoom(ZOOM_LEVEL_SELECTED)
         }, 1000)
       }
-    },
-    activeStage (newStage, _oldStage) {
-      if (newStage) {
-        this.showRightPanel(true)
-        this.map.panTo({ ...this.activeStageCoordinates, zoom: 12 })
-        setTimeout(() => this.map.setZoom(ZOOM_LEVEL_SELECTED), 1000)
-      }
     }
   },
-  mounted () {
-    setTimeout(() => {
-      this.$refs.mapRef.$mapPromise.then(map => (this.map = map))
-
-      const rally = require('@/assets/map/data/geojson/rally.geojson')
-      const rallycross = require('@/assets/map/data/geojson/rallycross.geojson')
-      const rallyStages = require('@/assets/map/data/geojson/rally-stages.geojson')
-
-      this.addFeatures(...rally.features, ...rallyStages.features)
-    }, 2000)
+  async mounted () {
+    this.map = await this.$refs.mapRef.$mapPromise
   },
   methods: {
-    ...mapMutations(['showRightPanel', 'addLocation', 'addStage', 'setActiveStage', 'setActiveLocation', 'setMap']),
-    addFeatures (...features) {
-      features.forEach(({ geometry, properties }) => {
-        if (geometry.type === 'Point') {
-          const [lng, lat] = geometry.coordinates
-          this.addLocation({ name: properties.name, description: properties.description, countryCode: properties.countryCode, coordinates: { lat, lng } })
-        } else if (geometry.type === 'LineString') {
-          const coordinates = geometry.coordinates.map(([lng, lat]) => ({ lat, lng }))
-          // this.addStage({ name: properties.name, description: properties.description, coordinates })
-        }
+    ...mapMutations(['showRightPanel', 'addStage', 'setActiveStage', 'setActiveLocation', 'setMap']),
+    addLocations (...locations) {
+      locations.forEach(({ name, countryCode, coordinates }) => {
+        const [lng, lat] = coordinates
+        this.addLocation({ name, countryCode, coordinates: { lat, lng } })
       })
     },
     markerClick (location) {
