@@ -3,13 +3,11 @@
     <div class="__close" @click="showRightPanel(false)">
       Close
     </div>
-    <div v-if="activeStage" class="__stageContent">
-      <h2>{{ activeStage.name }}</h2>
-      <p>{{ activeStage.description }}</p>
-    </div>
     <div v-if="activeLocation" class="__locationContent">
       <h2>{{ activeLocation.name }}</h2>
-      <p>{{ activeLocation.description }}</p>
+    </div>
+    <div v-if="activeStage" class="__stageContent">
+      <h3>{{ activeStage.name }}</h3>
     </div>
   </div>
 </template>
@@ -28,7 +26,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .__contentPanel {
   background-color: rgba(31, 31, 31, 0.7);
   padding: 1rem 1rem;
@@ -47,11 +45,11 @@ export default {
   color: white;
   background-color: #e91f1f;
   font-size: 1rem;
-}
 
-.__close:hover {
-  cursor: pointer;
-  background-color: #d40909;
+  &:hover {
+    cursor: pointer;
+    background-color: #d40909;
+  }
 }
 
 </style>

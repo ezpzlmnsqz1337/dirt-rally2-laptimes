@@ -22,12 +22,27 @@
         <div>{{ activeLocation.name }}</div>
         <div><span :class="`fp fp-lg ${activeLocation.countryCode}`" /></div>
       </div>
+      <div class="__heading">
+        Forward
+      </div>
       <div
         v-for="(s, index) in activeLocation.forward"
-        :key="`stage-${index}`"
+        :key="`stage-forward-${index}`"
         class="__item stage"
-        :class="{__active: isActiveStage(l)}"
-        @click="setActiveStage(l)"
+        :class="{__active: isActiveStage(s)}"
+        @click="setActiveStage(s)"
+      >
+        <div>{{ s.name }}</div> <div>{{ s.lengthKm }}km</div>
+      </div>
+      <div class="__heading">
+        Reverse
+      </div>
+      <div
+        v-for="(s, index) in activeLocation.reverse"
+        :key="`stage-reverse-${index}`"
+        class="__item stage"
+        :class="{__active: isActiveStage(s)}"
+        @click="setActiveStage(s)"
       >
         <div>{{ s.name }}</div> <div>{{ s.lengthKm }}km</div>
       </div>
@@ -69,7 +84,7 @@ export default {
   flex-direction: column;
 }
 
-.__locations {
+.__locations, .__stages {
   overflow: scroll;
 }
 

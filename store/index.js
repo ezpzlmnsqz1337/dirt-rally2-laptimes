@@ -30,6 +30,7 @@ export const mutations = {
   },
   setActiveLocation (state, location) {
     state.activeLocation = location
+    state.activeStage = null
   },
   setActiveStage (state, stage) {
     state.activeStage = stage

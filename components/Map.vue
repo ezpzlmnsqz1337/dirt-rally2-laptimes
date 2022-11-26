@@ -2,7 +2,7 @@
   <div class="__main">
     <gmap-map
       ref="mapRef"
-      :center="{ lat: 30, lng: 35 }"
+      :center="center"
       :zoom="2.5"
       :options="{disableDefaultUI: true, minZoom: 2.5}"
       map-type-id="satellite"
@@ -51,6 +51,7 @@ export default {
       infoOptions: {},
       hoverStage: null,
       circleOptions: {},
+      center: { lat: 30, lng: 35 },
       pins: {
         selected: `data:image/png;base64,${markerSelected64x64}`,
         notSelected: `data:image/png;base64,${marker64x64}`
@@ -73,12 +74,16 @@ export default {
   watch: {
     activeLocation (newLocation, _oldLocation) {
       if (newLocation) {
-        this.showRightPanel(true)
         this.map.panTo({ ...newLocation.coordinates, zoom: 12 })
         setTimeout(() => {
           this.map.setZoom(ZOOM_LEVEL_SELECTED)
         }, 1000)
+      } else {
+        this.map.panTo({ ...this.center, zoom: 2.5 })
       }
+    },
+    activeStage (_newStage, _oldStage) {
+      this.showRightPanel(true)
     }
   },
   async mounted () {
