@@ -40,6 +40,7 @@ import { mapMutations, mapState } from 'vuex'
 import { marker64x64 } from '~/assets/map/icons/base64/rally-marker-64x64'
 import { markerSelected64x64 } from '~/assets/map/icons/base64/rally-marker-selected-64x64'
 
+const ZOOM_LEVEL_FAR = 2.5
 const ZOOM_LEVEL_SELECTED = 14
 
 export default {
@@ -64,7 +65,9 @@ export default {
           height: 56,
           textColor: '#fff'
         }
-      ]
+      ],
+      zooming: null,
+      panning: null
     }
   },
   computed: {
@@ -74,12 +77,10 @@ export default {
   watch: {
     activeLocation (newLocation, _oldLocation) {
       if (newLocation) {
-        this.map.panTo({ ...newLocation.coordinates, zoom: 12 })
-        setTimeout(() => {
-          this.map.setZoom(ZOOM_LEVEL_SELECTED)
-        }, 1000)
+        this.zoomToLocation(newLocation)
       } else {
-        this.map.panTo({ ...this.center, zoom: 2.5 })
+        this.zoomOut()
+        this.showRightPanel(false)
       }
     },
     activeStage (_newStage, _oldStage) {
@@ -88,6 +89,7 @@ export default {
   },
   async mounted () {
     this.map = await this.$refs.mapRef.$mapPromise
+    console.log(this.map)
   },
   methods: {
     ...mapMutations(['showRightPanel', 'addStage', 'setActiveStage', 'setActiveLocation', 'setMap']),
@@ -117,6 +119,30 @@ export default {
         return '#57a8de'
       }
       return '#a6d5f5'
+    },
+    zoomToLocation (location) {
+      if (this.panning !== null) {
+        clearTimeout(this.panning)
+      }
+      this.map.panTo({ ...location.coordinates })
+      this.fluentZoom(ZOOM_LEVEL_SELECTED)
+    },
+    zoomOut () {
+      if (this.panning !== null) {
+        clearTimeout(this.panning)
+      }
+      this.fluentZoom(ZOOM_LEVEL_FAR)
+      this.panning = setTimeout(() => this.map.panTo({ ...this.center }), 5000)
+    },
+    fluentZoom (zoom, speed = 300) {
+      if (this.zooming !== null) {
+        clearTimeout(this.zooming)
+      }
+      const currentZoom = this.map.getZoom()
+      if (zoom === currentZoom) { return }
+      const newZoom = currentZoom < zoom ? currentZoom + 1 : currentZoom - 1
+      this.map.setZoom(newZoom)
+      this.zooming = setTimeout(() => this.fluentZoom(zoom, speed), speed)
     }
   }
 }

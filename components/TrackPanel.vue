@@ -16,10 +16,12 @@
     </div>
     <div v-if="activeLocation" class="__stages">
       <div class="__back">
-        <button @click="setActiveLocation(null)">
+        <button @click="back()">
           &lt; Back
         </button>
-        <div>{{ activeLocation.name }}</div>
+        <div class="__stage">
+          {{ activeLocation.name }}
+        </div>
         <div><span :class="`fp fp-lg ${activeLocation.countryCode}`" /></div>
       </div>
       <div class="__heading">
@@ -59,14 +61,17 @@ export default {
     ...mapState(['locations', 'stages', 'activeLocation', 'activeStage', 'stagesShow', 'locationsShow'])
   },
   methods: {
-    ...mapMutations(['setActiveStage', 'setActiveLocation', 'showStages', 'showLocations']),
+    ...mapMutations(['setActiveStage', 'setActiveLocation', 'showStages', 'showLocations', 'showRightPanel']),
     isActiveLocation (location) {
       if (!location || !this.activeLocation) { return false }
-      return location.name === this.activeLocation.name
+      return location.id === this.activeLocation.id
     },
     isActiveStage (stage) {
       if (!stage || !this.activeStage) { return false }
-      return stage.name === this.activeStage.name
+      return stage.id === this.activeStage.id
+    },
+    back () {
+      this.setActiveLocation(null)
     }
   }
 }
@@ -86,6 +91,11 @@ export default {
 
 .__locations, .__stages {
   overflow: scroll;
+}
+
+.__stage {
+  text-align: center;
+  padding: 0 0.5rem;
 }
 
 .__heading {
@@ -147,6 +157,7 @@ h2 {
   button {
     padding: 0.8rem 1rem;
     font-size: 1rem;
+    white-space: nowrap;
     border-radius: 0.3rem;
     background-color: #777777;
 
