@@ -34,7 +34,12 @@
         :class="{__active: isActiveStage(s)}"
         @click="setActiveStage(s)"
       >
-        <div>{{ s.name }}</div> <div>{{ s.lengthKm }}km</div>
+        <div>
+          <div>{{ s.name }}</div> <div>{{ s.lengthKm }}km</div>
+        </div>
+        <div v-if="getTimesForStage(s).length > 0">
+          {{ getTimesForStage(s).length }} time(s)
+        </div>
       </div>
       <div class="__heading">
         Reverse
@@ -46,19 +51,25 @@
         :class="{__active: isActiveStage(s)}"
         @click="setActiveStage(s)"
       >
-        <div>{{ s.name }}</div> <div>{{ s.lengthKm }}km</div>
+        <div>
+          <div>{{ s.name }}</div> <div>{{ s.lengthKm }}km</div>
+        </div>
+        <div v-if="getTimesForStage(s).length > 0">
+          {{ getTimesForStage(s).length }} time(s)
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 
 export default {
   name: 'TrackPanel',
   computed: {
-    ...mapState(['locations', 'stages', 'activeLocation', 'activeStage', 'stagesShow', 'locationsShow'])
+    ...mapState(['locations', 'stages', 'activeLocation', 'activeStage', 'stagesShow', 'locationsShow']),
+    ...mapGetters(['getTimesForStage'])
   },
   methods: {
     ...mapMutations(['setActiveStage', 'setActiveLocation', 'showStages', 'showLocations', 'showRightPanel']),
@@ -126,6 +137,9 @@ h2 {
 }
 
 .__item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   padding: 0.8rem 1rem;
   margin-bottom: 0.5rem;
   font-size: 1rem;

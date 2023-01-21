@@ -1,10 +1,14 @@
 import { cars } from '@/assets/db/cars'
+import { drivers } from '@/assets/db/drivers'
+import { times } from '@/assets/db/times'
 import { locations } from '@/assets/db/locations'
 
 export const state = () => ({
   cars,
   locations: locations.rally,
   stages: [],
+  drivers,
+  times,
   activeLocation: null,
   activeStage: null,
   rightPanelShow: false,
@@ -34,5 +38,20 @@ export const mutations = {
   },
   setActiveStage (state, stage) {
     state.activeStage = stage
+  }
+}
+
+export const getters = {
+  getTimesForStage: state => (stage) => {
+    return state.times
+      .filter(x => x.stageId === stage.id)
+      .map(({ carId, driverId, locationId, stageId, ...laptime }) => ({
+        ...laptime,
+        car: state.cars.find(x => x.id === carId),
+        driver: state.drivers.find(x => x.id === driverId),
+        location: state.locations.find(x => x.id === locationId),
+        stage: state.stages.find(x => x.id === stageId)
+      }))
+      .sort((a, b) => a.laptime - b.laptime)
   }
 }

@@ -83,13 +83,12 @@ export default {
         this.showRightPanel(false)
       }
     },
-    activeStage (_newStage, _oldStage) {
-      this.showRightPanel(true)
+    activeStage (newStage, _oldStage) {
+      this.showRightPanel(Boolean(newStage))
     }
   },
   async mounted () {
     this.map = await this.$refs.mapRef.$mapPromise
-    console.log(this.map)
   },
   methods: {
     ...mapMutations(['showRightPanel', 'addStage', 'setActiveStage', 'setActiveLocation', 'setMap']),

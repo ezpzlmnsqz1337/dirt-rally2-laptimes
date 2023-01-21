@@ -1,6 +1,6 @@
 <template>
   <div class="__contentPanel">
-    <div class="__close" @click="showRightPanel(false)">
+    <div class="__close" @click="close()">
       Close
     </div>
     <div v-if="activeLocation" class="__locationContent">
@@ -8,20 +8,29 @@
     </div>
     <div v-if="activeStage" class="__stageContent">
       <h3>{{ activeStage.name }}</h3>
+      <div class="__table">
+        <TimeTable :times="getTimesForStage(activeStage)" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
+import TimeTable from './TimeTable.vue'
 
 export default {
   name: 'ContentPanel',
+  components: { TimeTable },
   computed: {
-    ...mapState(['activeStage', 'activeLocation'])
+    ...mapState(['activeStage', 'activeLocation']),
+    ...mapGetters(['getTimesForStage'])
   },
   methods: {
-    ...mapMutations(['showRightPanel'])
+    ...mapMutations(['showRightPanel', 'setActiveStage']),
+    close () {
+      this.setActiveStage(null)
+    }
   }
 }
 </script>
@@ -34,21 +43,25 @@ export default {
   height: 95vh;
   margin: 1.5rem;
   position: relative;
-}
 
-.__close {
-  border-radius: 0.3rem;
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-  padding: 0.5rem 1rem;
-  color: white;
-  background-color: #e91f1f;
-  font-size: 1rem;
+  .__table {
+    margin-top: 4.5rem;
+  }
 
-  &:hover {
-    cursor: pointer;
-    background-color: #d40909;
+  .__close {
+    border-radius: 0.3rem;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    padding: 0.5rem 1rem;
+    color: white;
+    background-color: #e91f1f;
+    font-size: 1rem;
+
+    &:hover {
+      cursor: pointer;
+      background-color: #d40909;
+    }
   }
 }
 
