@@ -11,7 +11,7 @@
           {{ index + 1 }}.
         </td>
         <td class="__driver">
-          {{ time.driver.name }}
+          <span>{{ time.driver.name }}</span>
         </td>
         <td class="__time">
           {{ time.time }}
@@ -101,9 +101,37 @@ export default {
         border-top: 1px solid white;
 
         &.__losing {
-          color: #ff0000;
+          color: #cb0b2b;
+
+          span {
+            // font-weight: bold;
+            background-color: rgba(31, 31, 31, 0.7);
+            padding: 0.3rem;
+            border-radius: 0.3rem;
+          }
         }
       }
+    }
+
+    tr:nth-child(-n+4) {
+      .__driver span {
+        box-shadow: 0.2rem 0.2rem 0.5rem 0.2rem #555454;
+        background-color: #424242;
+        padding: 0.3rem;
+        border-radius: 0.3rem;
+        color: var(--medal) ;
+        border: 0.1rem solid var(--medal);
+      }
+    }
+
+    tr:nth-child(2) .__driver span {
+      --medal: gold;
+    }
+    tr:nth-child(3) .__driver span {
+      --medal: silver;
+    }
+    tr:nth-child(4) .__driver span {
+      --medal: #cd7f32;
     }
   }
 }

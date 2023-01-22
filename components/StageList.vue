@@ -1,8 +1,5 @@
 <template>
   <div class="__wrapper">
-    <div class="__heading">
-      {{ heading }}
-    </div>
     <div
       v-for="s in stages"
       :key="`stage-${s.id}`"
@@ -26,10 +23,6 @@ import { mapState, mapMutations, mapGetters } from 'vuex'
 export default {
   name: 'StageList',
   props: {
-    heading: {
-      type: String,
-      default: ''
-    },
     stages: {
       type: Array,
       default: () => []

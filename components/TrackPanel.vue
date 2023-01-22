@@ -16,8 +16,16 @@
         </div>
         <div><span :class="`fp fp-lg ${activeLocation.countryCode}`" /></div>
       </div>
-      <StageList heading="Forward" :stages="activeLocation.forward" />
-      <StageList heading="Reverse" :stages="activeLocation.reverse" />
+
+      <div class="__heading">
+        Forward
+      </div>
+      <StageList :stages="activeLocation.forward" />
+
+      <div class="__heading">
+        Reverse
+      </div>
+      <StageList :stages="activeLocation.reverse" />
     </div>
   </div>
 </template>
