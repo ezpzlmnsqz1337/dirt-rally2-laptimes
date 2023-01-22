@@ -2,6 +2,7 @@ import { cars } from '@/assets/db/cars'
 import { drivers } from '@/assets/db/drivers'
 import { times } from '@/assets/db/times'
 import { locations } from '@/assets/db/locations'
+import LaptimeBuilder from '~/builders/LaptimeBuilder'
 
 export const state = () => ({
   cars,
@@ -14,7 +15,8 @@ export const state = () => ({
   rightPanelShow: false,
   leftPanelShow: true,
   locationsShow: true,
-  stagesShow: false
+  stagesShow: false,
+  carGroupFilter: 'Any'
 })
 
 export const mutations = {
@@ -38,6 +40,9 @@ export const mutations = {
   },
   setActiveStage (state, stage) {
     state.activeStage = stage
+  },
+  setCarGroupFilter (state, group) {
+    state.carGroupFilter = group
   }
 }
 
@@ -52,6 +57,9 @@ export const getters = {
         location: state.locations.find(x => x.id === locationId),
         stage: state.stages.find(x => x.id === stageId)
       }))
-      .sort((a, b) => a.laptime - b.laptime)
+      .sort((a, b) => LaptimeBuilder.getInstance().compareLaptimes(a.time, b.time))
+  },
+  getCarGroups: state => () => {
+    return ['Any', ...new Set(state.cars.map(x => x.group))]
   }
 }

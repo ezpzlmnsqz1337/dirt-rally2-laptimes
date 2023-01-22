@@ -1,12 +1,12 @@
 <template>
   <div class="__timeTable">
-    <table v-if="times.length > 0">
+    <table v-if="rows.length > 0">
       <tr>
         <th v-for="c in columns" :key="c">
           {{ c }}
         </th>
       </tr>
-      <tr v-for="(time, index) in times" :key="time.id">
+      <tr v-for="(time, index) in rows" :key="time.id">
         <td class="__position">
           {{ index + 1 }}.
         </td>
@@ -49,6 +49,10 @@ export default {
       type: Array,
       default: () => []
     },
+    group: {
+      type: String,
+      default: 'Any'
+    },
     showLocation: {
       type: Boolean,
       default: false
@@ -62,6 +66,9 @@ export default {
     columns () {
       return ['Position', 'Driver', 'Time', 'Losing', 'Car', 'Group', 'Location', 'Stage']
         .filter(x => (!this.showStage && x !== 'Stage') && (!this.showLocation && x !== 'Location'))
+    },
+    rows () {
+      return this.group === 'Any' ? this.times : this.times.filter(x => x.car.group === this.group)
     }
   },
   created () {
@@ -73,7 +80,6 @@ export default {
 <style scoped lang="scss">
 .__timeTable {
   width: 100%;
-  padding: 1rem;
 
   table {
     width: 100%;

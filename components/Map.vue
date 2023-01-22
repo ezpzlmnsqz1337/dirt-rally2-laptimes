@@ -3,8 +3,8 @@
     <gmap-map
       ref="mapRef"
       :center="center"
-      :zoom="2.5"
-      :options="{disableDefaultUI: true, minZoom: 2.5}"
+      :zoom="ZOOM_LEVEL_FAR"
+      :options="{disableDefaultUI: true, minZoom: ZOOM_LEVEL_FAR}"
       map-type-id="satellite"
       class="__map"
     >
@@ -40,9 +40,6 @@ import { mapMutations, mapState } from 'vuex'
 import { marker64x64 } from '~/assets/map/icons/base64/rally-marker-64x64'
 import { markerSelected64x64 } from '~/assets/map/icons/base64/rally-marker-selected-64x64'
 
-const ZOOM_LEVEL_FAR = 2.5
-const ZOOM_LEVEL_SELECTED = 14
-
 export default {
   name: 'IndexPage',
   data () {
@@ -69,6 +66,10 @@ export default {
       zooming: null,
       panning: null
     }
+  },
+  created () {
+    this.ZOOM_LEVEL_FAR = 3
+    this.ZOOM_LEVEL_SELECTED = 14
   },
   computed: {
     google: getGoogleMapsAPI,
@@ -124,13 +125,13 @@ export default {
         clearTimeout(this.panning)
       }
       this.map.panTo({ ...location.coordinates })
-      this.fluentZoom(ZOOM_LEVEL_SELECTED)
+      this.fluentZoom(this.ZOOM_LEVEL_SELECTED)
     },
     zoomOut () {
       if (this.panning !== null) {
         clearTimeout(this.panning)
       }
-      this.fluentZoom(ZOOM_LEVEL_FAR)
+      this.fluentZoom(this.ZOOM_LEVEL_FAR)
       this.panning = setTimeout(() => this.map.panTo({ ...this.center }), 5000)
     },
     fluentZoom (zoom, speed = 300) {

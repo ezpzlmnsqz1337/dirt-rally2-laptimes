@@ -9,7 +9,8 @@
     <div v-if="activeStage" class="__stageContent">
       <h3>{{ activeStage.name }}</h3>
       <div class="__table">
-        <TimeTable :times="getTimesForStage(activeStage)" />
+        <CarGroupFilter class="__carGroupFilter" />
+        <TimeTable :times="getTimesForStage(activeStage)" :group="carGroupFilter" />
       </div>
     </div>
   </div>
@@ -17,17 +18,15 @@
 
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex'
-import TimeTable from './TimeTable.vue'
 
 export default {
   name: 'ContentPanel',
-  components: { TimeTable },
   computed: {
-    ...mapState(['activeStage', 'activeLocation']),
+    ...mapState(['activeStage', 'activeLocation', 'carGroupFilter']),
     ...mapGetters(['getTimesForStage'])
   },
   methods: {
-    ...mapMutations(['showRightPanel', 'setActiveStage']),
+    ...mapMutations(['showRightPanel', 'setActiveStage', 'setCarGroupFilter']),
     close () {
       this.setActiveStage(null)
     }
@@ -45,7 +44,12 @@ export default {
   position: relative;
 
   .__table {
-    margin-top: 4.5rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-end;
   }
 
   .__close {
