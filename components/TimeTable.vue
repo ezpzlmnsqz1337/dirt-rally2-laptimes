@@ -72,6 +72,7 @@ export default {
     }
   },
   created () {
+    console.log('ROWS', this.rows)
     this.$ltb = LaptimeBuilder.getInstance()
   }
 }
