@@ -13,12 +13,18 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'IndexPage',
   computed: {
     ...mapState(['rightPanelShow', 'leftPanelShow'])
+  },
+  mounted () {
+    this.bindDb()
+  },
+  methods: {
+    ...mapActions(['bindDb'])
   }
 }
 </script>

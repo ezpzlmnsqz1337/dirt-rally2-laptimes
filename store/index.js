@@ -1,3 +1,6 @@
+import { collection } from 'firebase/firestore'
+import { bindFirestoreCollection, firebaseMutations } from './vuex-firestore-binding'
+import { db } from '@/plugins/firebase'
 import { cars } from '@/assets/db/cars'
 import { drivers } from '@/assets/db/drivers'
 import { times } from '@/assets/db/times'
@@ -43,7 +46,8 @@ export const mutations = {
   },
   setCarGroupFilter (state, group) {
     state.carGroupFilter = group
-  }
+  },
+  ...firebaseMutations
 }
 
 export const getters = {
@@ -61,5 +65,12 @@ export const getters = {
   },
   getCarGroups: state => () => {
     return ['Any', ...new Set(state.cars.map(x => x.group))]
+  }
+}
+
+export const actions = {
+  bindDb () {
+    bindFirestoreCollection(this, 'drivers', collection(db, 'drivers'))
+    bindFirestoreCollection(this, 'times', collection(db, 'laptimes'))
   }
 }
