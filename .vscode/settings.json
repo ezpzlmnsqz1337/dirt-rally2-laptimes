@@ -10,6 +10,6 @@
       "path-intellisense.mappings": {
         "@": "${workspaceRoot}/src"
       },
-      "editor.formatOnSave": false,
-      "vetur.validation.style": false
+    "editor.formatOnSave": false,
+    "typescript.tsdk": "node_modules/typescript/lib",
 }

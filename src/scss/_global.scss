@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+html, body {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+.v-select > .vs__dropdown-toggle {
+  background-color: var(#fff);
+  border-radius: 0.3rem;
+  padding: 0.5rem;
+  border: 0.1rem solid black;
+}
+
+.vs__actions .vs__clear {
+  fill: red;
+}
