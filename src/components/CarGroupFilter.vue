@@ -17,8 +17,8 @@ const {
 
 <template>
   <div class="__wrapper">
-    Group: <v-select class="__select" :options="carGroups" :value="carGroupFilter" :searchable="false"
-      :clearable="false" @input="setCarGroupFilter" />
+    Group: <v-select class="__select" :options="carGroups" :model-value="carGroupFilter" :searchable="false"
+      :clearable="false" @update:model-value="setCarGroupFilter($event)" />
   </div>
 </template>
 

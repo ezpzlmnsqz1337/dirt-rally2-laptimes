@@ -56,9 +56,10 @@ export default class LaptimeBuilder {
 
   static componentsFromLaptime (laptime: string): LaptimeComponents | undefined {
     const components = laptime.match(LaptimeBuilder.pattern)
-    if (!components || components.length !== 3) { return }
+    if (!components) { return }
 
-    const [minutes, seconds, miliseconds] = components
-    return { minutes, seconds, miliseconds }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [full, minutes, seconds, milliseconds] = components
+    return { minutes, seconds, milliseconds }
   }
 }

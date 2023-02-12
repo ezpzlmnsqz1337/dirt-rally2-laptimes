@@ -10,6 +10,8 @@ import { useDataStore } from '@/stores/data';
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
 
+const gmapApiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+
 // store
 const store = useDataStore()
 
@@ -130,7 +132,7 @@ const fluentZoom = (zoom: number, speed = 300) => {
 
 <template>
   <div class="__main">
-    <GoogleMap :api-key="import.meta.env.VITE_GOOGLE_MAPS_API_KEY" ref="mapRef" :center="center" :zoom="ZOOM_LEVEL_FAR"
+    <GoogleMap :api-key="gmapApiKey" ref="mapRef" :center="center" :zoom="ZOOM_LEVEL_FAR"
       :disableDefaultUi="true" :minZoom="ZOOM_LEVEL_FAR" map-type-id="satellite" class="__map">
       <Marker v-for="(l, index) in locations" :key="index" :options="{
         position: l.coordinates,

@@ -40,7 +40,7 @@ const getLaptimeDiff = (time1: LaptimeWithData, time2: LaptimeWithData) => {
           {{ c }}
         </th>
       </tr>
-      <tr v-for="(time, index) in rows" :key="time.uid">
+      <tr v-for="(time, index) in rows" :key="time.id">
         <td class="__position">
           {{ index + 1 }}.
         </td>

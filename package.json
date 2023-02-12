@@ -15,14 +15,15 @@
   },
   "dependencies": {
     "firebase": "^9.17.1",
+    "flagpack": "^1.0.5",
     "pinia": "^2.0.28",
     "uuid": "^9.0.0",
     "vue": "^3.2.45",
     "vue-select": "4.0.0-beta.6",
-    "vue3-google-map": "^0.15.0",
-    "flagpack": "^1.0.5"
+    "vue3-google-map": "^0.15.0"
   },
   "devDependencies": {
+    "@pinia/testing": "^0.0.14",
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/jsdom": "^20.0.1",
     "@types/node": "^18.11.12",

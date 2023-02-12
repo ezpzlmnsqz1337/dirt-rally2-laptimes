@@ -4,7 +4,7 @@ import type { Stage } from './Stage'
 import type { Location } from './Location'
 
 export interface LaptimeWithData {
-  uid: string
+  id: string
   car?: Car
   driver?: Driver
   location?: Location

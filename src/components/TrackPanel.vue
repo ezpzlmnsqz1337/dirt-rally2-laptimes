@@ -34,8 +34,8 @@ const back = () => {
       <LocationList :locations="(locations as Location[])" />
     </div>
     <div v-if="activeLocation" class="__stages">
-      <div class="__back">
-        <div @click="back()">
+      <div class="__top">
+        <div class="__back" @click="back()">
           &lt; Back
         </div>
         <div class="__stage">
@@ -83,13 +83,13 @@ const back = () => {
   margin-bottom: 1rem;
 }
 
-.__back {
+.__top {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
 
-  div {
+  .__back {
     padding: 0.8rem 1rem;
     font-size: 1rem;
     white-space: nowrap;

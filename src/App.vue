@@ -24,7 +24,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="__wrapper">
+  <div class="__app">
     <div class="__background">
       <MapView />
     </div>
@@ -38,39 +38,42 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss">
-.__wrapper,
-.__background {
+.__app {
   font-family: 'Inter', sans-serif;
-  color: white;
-  width: 100%;
-  height: 100%;
-}
+    color: white;
+    width: 100%;
+    height: 100%;
 
-.__background {
-  position: absolute;
-}
-
-.__left {
-  position: absolute;
-  transition: left 0.3s;
-  left: 0;
-  height: 100%;
-  z-index: 1;
-
-  &.__hidden {
-    left: -100vw;
+  .__background {
+    font-family: 'Inter', sans-serif;
+    color: white;
+    width: 100%;
+    height: 100%;
+    position: absolute;
   }
-}
 
-.__right {
-  position: absolute;
-  transition: right 0.3s;
-  right: 0;
-  height: 100%;
-  z-index: 1;
+  .__left {
+    position: absolute;
+    transition: left 0.3s;
+    left: 0;
+    height: 100%;
+    z-index: 1;
 
-  &.__hidden {
-    right: -100vw;
+    &.__hidden {
+      left: -100vw;
+    }
+  }
+
+  .__right {
+    position: absolute;
+    transition: right 0.3s;
+    right: 0;
+    height: 100%;
+    z-index: 1;
+
+    &.__hidden {
+      right: -100vw;
+    }
   }
 }
 </style>

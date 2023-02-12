@@ -95,22 +95,22 @@ export const useDataStore = defineStore('data', () => {
   }
 
   const addDriver = async (name: string) => {
-    const driver = { uid: uuidv4(), name }
-    const docRef = doc(db, 'drivers', driver.uid)
+    const driver = { id: uuidv4(), name }
+    const docRef = doc(db, 'drivers', driver.id)
     await setDoc(docRef, driver)
   }
 
   const addLaptime = async (laptime: Laptime) => {
     const time = { ...laptime, uid: uuidv4(), dateString: new Date(laptime.timestamp).toLocaleDateString('en-GB') }
-    const docRef = doc(db, 'laptimes', time.uid)
+    const docRef = doc(db, 'laptimes', time.id)
     await setDoc(docRef, time)
   }
 
   const updateLaptime = async (laptime: Laptime) => {
-    if (!laptime || !laptime.uid) {
+    if (!laptime || !laptime.id) {
       return
     }
-    const docRef = doc(db, 'laptimes', laptime.uid)
+    const docRef = doc(db, 'laptimes', laptime.id)
     await setDoc(docRef, laptime, { merge: true })
   }
 
@@ -124,13 +124,13 @@ export const useDataStore = defineStore('data', () => {
     collection.push(data as T)
   }
 
-  const modifyFirestoreDocument = <T extends { uid: string }>(collection: T[], data: DocumentData) => {
-    const index: number = collection.findIndex(x => x.uid === data.uid);
+  const modifyFirestoreDocument = <T extends { id: string }>(collection: T[], data: DocumentData) => {
+    const index: number = collection.findIndex(x => x.id === data.id);
     collection.splice(index, 1, data as T)
   }
 
-  const removeFirestoreDocument = <T extends { uid: string }>(collection: T[], data: DocumentData) => {
-    const index: number = collection.findIndex(x => x.uid === data.uid);
+  const removeFirestoreDocument = <T extends { id: string }>(collection: T[], data: DocumentData) => {
+    const index: number = collection.findIndex(x => x.id === data.id);
     collection.splice(index, 1)
   }
 
@@ -155,7 +155,7 @@ export const useDataStore = defineStore('data', () => {
   }
 
 
-  const bindFirestoreCollection = <T extends { uid: string }>(key: string, collection: T[], collectionRef: CollectionReference) => {
+  const bindFirestoreCollection = <T extends { id: string }>(key: string, collection: T[], collectionRef: CollectionReference) => {
     unsubscribe(key)
     clearFirestoreCollection<T>(collection)
     const unsub = onSnapshot(collectionRef,

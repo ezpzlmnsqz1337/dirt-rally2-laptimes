@@ -1,5 +1,5 @@
 export interface Laptime {
-  uid: string
+  id: string
   carId: number
   driverId: string
   locationId: number
@@ -12,5 +12,5 @@ export interface Laptime {
 export interface LaptimeComponents {
   minutes: string
   seconds: string
-  miliseconds: string
+  milliseconds: string
 }
