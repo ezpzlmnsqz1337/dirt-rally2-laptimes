@@ -1,10 +1,10 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
-import { createTestingPinia, type TestingOptions } from '@pinia/testing'
-import { mount } from '@vue/test-utils'
+import { locations } from '@/assets/db/locations'
 import TrackPanel from '@/components/TrackPanel.vue'
 import { useDataStore } from '@/stores/data'
-import { locations } from '@/assets/db/locations'
+import { createTestingPinia, type TestingOptions } from '@pinia/testing'
+import { mount } from '@vue/test-utils'
 
 function factory(options?: TestingOptions) {
   const wrapper = mount(TrackPanel, {

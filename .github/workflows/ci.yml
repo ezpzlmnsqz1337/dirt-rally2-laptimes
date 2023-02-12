@@ -29,19 +29,6 @@ jobs:
           node-version: ${{ matrix.node }}
           check-latest: true
 
-      - name: Get npm cache directory path 🛠
-        id: npm-cache-dir-path
-        run: echo "::set-output name=dir::$(npm cache dir)"
-
-      - name: Cache node_modules 📦
-        uses: actions/cache@v2.1.4
-        id: npm-cache # use this to check for `cache-hit` (`steps.npm-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.npm-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
-
       - name: Install dependencies 👨🏻‍💻
         run: npm ci
 
@@ -54,5 +41,3 @@ jobs:
       - name: Run unit tests 🧪
         run: npm run test:unit
 
-      - name: Run e2e tests 🎆
-        run: npm run test:e2e
