@@ -9,7 +9,6 @@ import { markerSelected64x64 } from '@/assets/map/icons/base64/rally-marker-sele
 import { useDataStore } from '@/stores/data';
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
-import { key as gmapKey } from '@/gmap-key';
 
 // store
 const store = useDataStore()
@@ -131,8 +130,8 @@ const fluentZoom = (zoom: number, speed = 300) => {
 
 <template>
   <div class="__main">
-    <GoogleMap :api-key="gmapKey" ref="mapRef" :center="center" :zoom="ZOOM_LEVEL_FAR"
-    :disableDefaultUi="true" :minZoom="ZOOM_LEVEL_FAR" map-type-id="satellite" class="__map">
+    <GoogleMap :api-key="import.meta.env.VITE_GOOGLE_MAPS_API_KEY" ref="mapRef" :center="center" :zoom="ZOOM_LEVEL_FAR"
+      :disableDefaultUi="true" :minZoom="ZOOM_LEVEL_FAR" map-type-id="satellite" class="__map">
       <Marker v-for="(l, index) in locations" :key="index" :options="{
         position: l.coordinates,
         icon: activeLocation === l ? pins.selected : pins.notSelected,

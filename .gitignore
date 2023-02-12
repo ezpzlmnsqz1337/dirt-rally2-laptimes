@@ -26,6 +26,3 @@ coverage
 *.njsproj
 *.sln
 *.sw?
-
-# Google Maps API key
-gmap-key.ts
