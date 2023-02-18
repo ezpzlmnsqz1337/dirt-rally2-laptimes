@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { LaptimeWithData } from '@/model/LaptimeWithData'
 
-import LaptimeBuilder from '@/builders/LaptimeBuilder'
+import LaptimeUtil from '@/utils/LaptimeUtil'
 import { computed } from 'vue'
 
 export interface Props {
@@ -26,10 +26,6 @@ const columns = computed(() =>
 const rows = computed(() => {
   return props.group === 'Any' ? props.times : props.times.filter(x => x.car?.group === props.group)
 })
-
-const getLaptimeDiff = (time1: LaptimeWithData, time2: LaptimeWithData) => {
-  return LaptimeBuilder.getLaptimeDiff(time1.time, time2.time)
-}
 </script>
 
 <template>
@@ -51,7 +47,7 @@ const getLaptimeDiff = (time1: LaptimeWithData, time2: LaptimeWithData) => {
           {{ time.time }}
         </td>
         <td class="__losing">
-          <span v-if="index > 0">{{ getLaptimeDiff(times[0], time) }}</span>
+          <span v-if="index > 0">{{ LaptimeUtil.getLaptimeDiff(times[0].time, time.time) }}</span>
         </td>
         <td class="__car">
           {{ time.car?.name }}

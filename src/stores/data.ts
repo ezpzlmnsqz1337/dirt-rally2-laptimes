@@ -8,7 +8,7 @@ import type { DocumentData, Unsubscribe } from 'firebase/firestore'
 
 import { cars as carsDb } from '@/assets/db/cars'
 import { locations as locationsDb } from '@/assets/db/locations'
-import LaptimeBuilder from '@/builders/LaptimeBuilder'
+import LaptimeUtil from '@/utils/LaptimeUtil'
 import { db } from '@/plugins/firebase'
 import { collection, CollectionReference, deleteDoc, doc, enableIndexedDbPersistence, onSnapshot, setDoc } from 'firebase/firestore'
 import { defineStore } from 'pinia'
@@ -91,7 +91,7 @@ export const useDataStore = defineStore('data', () => {
         location: locations.value.find(x => x.id === locationId),
         stage: stages.value.find(x => x.id === stageId)
       }) as LaptimeWithData)
-      .sort((a, b) => LaptimeBuilder.compareLaptimes(a.time, b.time))
+      .sort((a, b) => LaptimeUtil.compareLaptimes(a.time, b.time))
   }
 
   const addDriver = async (name: string) => {
