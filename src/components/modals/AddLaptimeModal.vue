@@ -121,4 +121,10 @@ const add = (laptime: Partial<Laptime>) => {
     }
   }
 }
+
+@media screen and (max-width: 768px) {
+  .__modal {
+    width: 80vw;
+  }
+}
 </style>
