@@ -17,8 +17,15 @@ const {
 
 <template>
   <div class="__wrapper">
-    Group: <v-select class="__select" :options="carGroups" :model-value="carGroupFilter" :searchable="false"
-      :clearable="false" @update:model-value="setCarGroupFilter($event)" />
+    Group:
+    <v-select
+      class="__select"
+      :options="carGroups"
+      :model-value="carGroupFilter"
+      :searchable="false"
+      :clearable="false"
+      @update:model-value="setCarGroupFilter($event)"
+    />
   </div>
 </template>
 
@@ -29,7 +36,6 @@ const {
   gap: 0.5rem;
 
   .__select {
-    color: black;
     min-width: 15rem;
     display: inline-block;
   }

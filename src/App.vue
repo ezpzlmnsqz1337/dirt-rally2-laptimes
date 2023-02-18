@@ -75,5 +75,48 @@ onBeforeUnmount(() => {
       right: -100vw;
     }
   }
+
+  .__btn {
+    border: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    font-size: 1rem;
+    color: white;
+    background-color: #777777;
+
+    &:disabled {
+      color: #d3d3d3;
+      background-color: #999999 !important;
+
+      &:hover {
+        cursor: not-allowed;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: #0045e0;
+    }
+
+    &.__success {
+      background-color: #2da701;
+
+      &:hover {
+        background-color: #006402;
+      }
+    }
+
+    &.__danger {
+      background-color: #e91f1f;
+
+      &:hover {
+        background-color: #d40909;
+      }
+    }
+  }
+
+  .__select {
+    color: black;
+  }
 }
 </style>

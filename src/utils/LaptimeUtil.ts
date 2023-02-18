@@ -3,7 +3,7 @@ import type { LaptimeComponents } from '@/model/Laptime'
 const SECONDS_LENGTH = 2
 const MILLISECONDS_LENGTH = 3
 
-export default class LaptimeBuilder {
+export default class LaptimeUtil {
   // laptime pattern is 1-2 digits for minutes, 2 digits for seconds, 3 digits for milliseconds
   static pattern = /^(\d{1,2}):(\d{2})\.(\d{3})$/
 
@@ -17,7 +17,7 @@ export default class LaptimeBuilder {
   }
 
   static laptimeToDate (laptime: string) {
-    const l1 = laptime.match(LaptimeBuilder.pattern)
+    const l1 = laptime.match(LaptimeUtil.pattern)
     if (!l1) { return }
     return new Date(parseInt(l1[1]) * 60 * 1000 + parseInt(l1[2]) * 1000 + parseInt(l1[3]))
   }
@@ -34,7 +34,7 @@ export default class LaptimeBuilder {
   static isLaptimeValid (minutes: string, seconds: string, milliseconds: string) {
     // check not set
     if ((minutes.length <= 0 || seconds.length !== SECONDS_LENGTH || milliseconds.length !== MILLISECONDS_LENGTH)) { return false }
-    if (!`${minutes}:${seconds}.${milliseconds}`.match(LaptimeBuilder.pattern)) { return false }
+    if (!`${minutes}:${seconds}.${milliseconds}`.match(LaptimeUtil.pattern)) { return false }
 
     const [m, s, ms] = [minutes, seconds, milliseconds].map(x => parseInt(x))
 
@@ -55,7 +55,7 @@ export default class LaptimeBuilder {
   }
 
   static componentsFromLaptime (laptime: string): LaptimeComponents | undefined {
-    const components = laptime.match(LaptimeBuilder.pattern)
+    const components = laptime.match(LaptimeUtil.pattern)
     if (!components) { return }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
