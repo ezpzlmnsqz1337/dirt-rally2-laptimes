@@ -100,8 +100,8 @@ export const useDataStore = defineStore('data', () => {
     await setDoc(docRef, driver)
   }
 
-  const addLaptime = async (laptime: Laptime) => {
-    const time = { ...laptime, uid: uuidv4(), dateString: new Date(laptime.timestamp).toLocaleDateString('en-GB') }
+  const addLaptime = async (laptime: Partial<Laptime>) => {
+    const time = { ...laptime, id: uuidv4(), dateString: new Date(laptime.timestamp!).toLocaleDateString('en-GB') }
     const docRef = doc(db, 'laptimes', time.id)
     await setDoc(docRef, time)
   }

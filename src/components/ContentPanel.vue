@@ -4,6 +4,8 @@ import { storeToRefs } from 'pinia';
 
 import CarGroupFilter from '@/components/CarGroupFilter.vue';
 import TimeTable from '@/components/TimeTable.vue';
+import AddLaptimeModal from '@/components/modals/AddLaptimeModal.vue';
+import { ref } from 'vue';
 
 // store
 const store = useDataStore()
@@ -22,11 +24,14 @@ const {
 const close = () => {
   setActiveStage(null)
 }
+
+const showAddModal = ref(false)
+
 </script>
 
 <template>
   <div class="__contentPanel">
-    <div class="__close" @click="close()">
+    <div class="__btn __danger __close" @click="close()">
       Close
     </div>
     <div v-if="activeLocation" class="__locationContent">
@@ -37,6 +42,8 @@ const close = () => {
       <div class="__table">
         <CarGroupFilter class="__carGroupFilter" />
         <TimeTable :times="getTimesForStage(activeStage)" :group="carGroupFilter" />
+        <div class="__btn __success" @click="showAddModal = !showAddModal">Add</div>
+        <AddLaptimeModal v-show="showAddModal" @close="showAddModal = false" />
       </div>
     </div>
   </div>
@@ -61,19 +68,9 @@ const close = () => {
   }
 
   .__close {
-    border-radius: 0.3rem;
     position: absolute;
     right: 1rem;
     top: 1rem;
-    padding: 0.5rem 1rem;
-    color: white;
-    background-color: #e91f1f;
-    font-size: 1rem;
-
-    &:hover {
-      cursor: pointer;
-      background-color: #d40909;
-    }
   }
 }
 </style>
