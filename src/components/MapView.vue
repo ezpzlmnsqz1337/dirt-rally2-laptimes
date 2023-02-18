@@ -25,6 +25,7 @@ const {
 const {
   setActiveLocation,
   setActiveStage,
+  showLeftPanel,
   showRightPanel,
 } = store
 
@@ -63,7 +64,10 @@ watch(activeLocation, newLocation => {
   }
 })
 
-watch(activeStage, newStage => showRightPanel(Boolean(newStage)))
+watch(activeStage, newStage => {
+  showLeftPanel(Boolean(!newStage))
+  showRightPanel(Boolean(newStage))
+})
 
 watch(() => mapRef.value?.ready, () => {
   // do map things if needed
