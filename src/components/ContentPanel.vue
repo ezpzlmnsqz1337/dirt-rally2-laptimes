@@ -73,4 +73,12 @@ const showAddModal = ref(false)
     top: 1rem;
   }
 }
+
+@media screen and (max-width: 768px) {
+  .__contentPanel {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+}
 </style>

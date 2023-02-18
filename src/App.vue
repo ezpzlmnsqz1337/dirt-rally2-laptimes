@@ -38,6 +38,10 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss">
+* {
+  box-sizing: border-box;
+}
+
 .__app {
   font-family: 'Inter', sans-serif;
     color: white;
@@ -58,10 +62,6 @@ onBeforeUnmount(() => {
     left: 0;
     height: 100%;
     z-index: 1;
-
-    &.__hidden {
-      left: -100vw;
-    }
   }
 
   .__right {
@@ -117,6 +117,24 @@ onBeforeUnmount(() => {
 
   .__select {
     color: black;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .__app {
+    .__left {
+      width: 100%;
+      margin: 0;
+
+      &.__hidden {
+        left: -100vw;
+      }
+    }
+
+    .__right {
+      width: 100%;
+      margin: 0;
+    }
   }
 }
 </style>
