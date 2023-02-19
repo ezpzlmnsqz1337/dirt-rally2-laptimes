@@ -5,7 +5,11 @@ import { storeToRefs } from 'pinia';
 import CarGroupFilter from '@/components/CarGroupFilter.vue';
 import TimeTable from '@/components/TimeTable.vue';
 import AddLaptimeModal from '@/components/modals/AddLaptimeModal.vue';
+import AddDriverModal from '@/components/modals/AddDriverModal.vue';
+
 import { ref } from 'vue';
+
+type ModalType = 'driver' | 'laptime';
 
 // store
 const store = useDataStore()
@@ -25,7 +29,18 @@ const close = () => {
   setActiveStage(null)
 }
 
-const showAddModal = ref(false)
+const showAddLaptimeModal = ref(false)
+const showAddDriverModal = ref(false)
+
+const showModal = (modal: ModalType) => {
+  if (modal === 'driver') {
+    showAddLaptimeModal.value = false
+    showAddDriverModal.value = true
+  } else {
+    showAddLaptimeModal.value = true
+    showAddDriverModal.value = false
+  }
+}
 
 </script>
 
@@ -42,8 +57,9 @@ const showAddModal = ref(false)
       <div class="__table">
         <CarGroupFilter class="__carGroupFilter" />
         <TimeTable :times="getTimesForStage(activeStage)" :group="carGroupFilter" />
-        <div class="__btn __success" @click="showAddModal = !showAddModal">Add</div>
-        <AddLaptimeModal v-show="showAddModal" @close="showAddModal = false" />
+        <div class="__btn __success" @click="showModal('laptime')">Add Laptime</div>
+        <AddLaptimeModal v-show="showAddLaptimeModal" @close="showAddLaptimeModal = false" @show-add-driver-modal="showModal('driver')" />
+        <AddDriverModal v-show="showAddDriverModal" @close="showModal('laptime')"  />
       </div>
     </div>
   </div>
@@ -65,6 +81,10 @@ const showAddModal = ref(false)
     flex-direction: column;
     gap: 1rem;
     align-items: flex-end;
+
+    .__carGroupFilter {
+      z-index: 0;
+    }
   }
 
   .__close {
@@ -79,6 +99,14 @@ const showAddModal = ref(false)
     width: 100%;
     height: 100%;
     margin: 0;
+
+    .__locationContent {
+      max-width: 70%;
+    }
+
+    .__table {
+      padding: 0;
+    }
   }
 }
 </style>

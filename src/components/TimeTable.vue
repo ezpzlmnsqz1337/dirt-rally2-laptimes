@@ -135,4 +135,15 @@ const rows = computed(() => {
     }
   }
 }
+
+@media screen and (max-width: 768px) {
+  .__timeTable {
+    font-size: 0.6rem;
+
+    th, td {
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+  }
+}
 </style>
