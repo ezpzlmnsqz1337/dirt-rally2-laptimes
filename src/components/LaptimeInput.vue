@@ -182,20 +182,6 @@ defineExpose({
     border-bottom: 0.1rem solid black;
   }
 
-  input {
-    border: 0.1rem solid black;
-    border-radius: 0.3rem;
-    font-size: 2rem;
-
-    &:focus {
-      outline: 0;
-    }
-
-    &:disabled {
-      background-color: #ffffff;
-    }
-  }
-
   &.__error {
     .__minutes {
       border: 0.15rem solid red;

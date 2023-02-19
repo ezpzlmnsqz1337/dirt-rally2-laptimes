@@ -38,14 +38,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss">
-* {
-  box-sizing: border-box;
-}
-
-h2 {
-  margin-top: 0;
-}
-
 .__app {
   font-family: 'Inter', sans-serif;
     color: white;

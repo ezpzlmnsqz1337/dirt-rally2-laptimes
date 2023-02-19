@@ -77,10 +77,6 @@ export const useDataStore = defineStore('data', () => {
     carGroupFilter.value = group
   }
 
-  const clearFirestoreCollection = <T>(collection: T[]) => {
-    collection.splice(0)
-  }
-
   const getTimesForStage = (stage: Stage): LaptimeWithData[] => {
     return times.value
       .filter((x: { stageId: any }) => x.stageId === stage.id)
@@ -138,6 +134,9 @@ export const useDataStore = defineStore('data', () => {
     subs.value.push({ key, unsubscribe })
   }
 
+  const clearFirestoreCollection = <T>(collection: T[]) => {
+    collection.splice(0)
+  }
 
   const unsubscribe = (key: string) => {
     const index = subs.value.findIndex(x => x.key === key)
@@ -148,12 +147,10 @@ export const useDataStore = defineStore('data', () => {
     subs.value.splice(index, 1)
   }
 
-
   const unsubscribeAll = () => {
     subs.value.forEach(x => x.unsubscribe())
     subs.value.splice(0)
   }
-
 
   const bindFirestoreCollection = <T extends { id: string }>(key: string, collection: T[], collectionRef: CollectionReference) => {
     unsubscribe(key)
