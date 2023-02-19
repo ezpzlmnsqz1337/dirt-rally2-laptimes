@@ -75,6 +75,10 @@ const showAddModal = ref(false)
 }
 
 @media screen and (max-width: 768px) {
+  .__locationContent {
+    max-width: 70%;
+  }
+
   .__contentPanel {
     width: 100%;
     height: 100%;

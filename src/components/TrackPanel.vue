@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Location } from '@/model/Location';
 import type { Stage } from '@/model/Stage';
 
 import { useDataStore } from '@/stores/data';
@@ -6,7 +7,6 @@ import { storeToRefs } from 'pinia';
 
 import LocationList from '@/components/LocationList.vue'
 import StageList from '@/components/StageList.vue'
-import type { Location } from '@/model/Location';
 
 // store
 const store = useDataStore()
@@ -41,7 +41,7 @@ const back = () => {
         <div class="__stage">
           {{ activeLocation.name }}
         </div>
-        <div><span :class="`fp fp-lg ${activeLocation.countryCode}`" /></div>
+        <div><span :class="`fp fp-lg ${activeLocation.countryCode}`"></span></div>
       </div>
 
       <div class="__heading">
