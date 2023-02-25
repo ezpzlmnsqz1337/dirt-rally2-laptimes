@@ -9,7 +9,7 @@ import { mount } from '@vue/test-utils'
 function factory(options?: TestingOptions) {
   const wrapper = mount(TrackPanel, {
     global: {
-      plugins: [createTestingPinia({ ...options })],
+      plugins: [createTestingPinia({ ...options, stubActions: false })],
     },
   })
 

@@ -28,15 +28,15 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const driverId = ref(drivers.value[0].id)
-const time = ref<string | null>(null)
-const carId = ref(0)
-
 const carsByGroup = computed(() => {
   return cars.value.filter(car => carGroupFilter.value === 'Any' || car.group === carGroupFilter.value)
 })
 
-watch(carGroupFilter, () => carId.value = Number(carsByGroup.value[0]?.id || 0))
+const driverId = ref(drivers.value[0].id)
+const time = ref<string | null>(null)
+const carId = ref(carsByGroup.value[0].id)
+
+watch(carGroupFilter, () => carId.value = Number(carsByGroup.value[0].id))
 
 const add = (laptime: Partial<Laptime>) => {
   addLaptime(laptime)

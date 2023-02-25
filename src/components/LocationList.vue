@@ -21,6 +21,7 @@ const {
 } = storeToRefs(store)
 
 const {
+  getTimesForLocation,
   setActiveLocation,
 } = store
 
@@ -39,7 +40,13 @@ const isActiveLocation  = (location: Location) => {
       :class="{__active: isActiveLocation(l as Location)}"
       @click="setActiveLocation(l as Location)"
     >
-      <div>{{ l.name }}</div> <div><span :class="`fp fp-lg ${l.countryCode}`" /></div>
+      <div>
+        {{ l.name }}
+        <div>{{ getTimesForLocation(l as Location).length }} time(s)</div>
+      </div>
+      <div>
+        <span :class="`fp fp-lg ${l.countryCode}`" ></span>
+      </div>
     </div>
   </div>
 </template>
