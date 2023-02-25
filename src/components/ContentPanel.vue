@@ -23,6 +23,7 @@ const {
 const {
   getTimesForStage,
   setActiveStage,
+  isLocal
 } = store
 
 const close = () => {
@@ -57,7 +58,7 @@ const showModal = (modal: ModalType) => {
       <div class="__table">
         <CarGroupFilter class="__carGroupFilter" />
         <TimeTable :times="getTimesForStage(activeStage)" :group="carGroupFilter" />
-        <div class="__btn __success" @click="showModal('laptime')">Add Laptime</div>
+        <div v-if="isLocal()" class="__btn __success" @click="showModal('laptime')">Add Laptime</div>
         <AddLaptimeModal v-show="showAddLaptimeModal" @close="showAddLaptimeModal = false" @show-add-driver-modal="showModal('driver')" />
         <AddDriverModal v-show="showAddDriverModal" @close="showModal('laptime')"  />
       </div>

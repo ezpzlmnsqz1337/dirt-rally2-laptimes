@@ -79,7 +79,20 @@ export const useDataStore = defineStore('data', () => {
 
   const getTimesForStage = (stage: Stage): LaptimeWithData[] => {
     return times.value
-      .filter((x: { stageId: any }) => x.stageId === stage.id)
+      .filter(x => x.stageId === stage.id)
+      .map(({ carId, driverId, locationId, stageId, ...laptime }) => ({
+        ...laptime,
+        car: cars.value.find(x => x.id === carId),
+        driver: drivers.value.find(x => x.id === driverId),
+        location: locations.value.find(x => x.id === locationId),
+        stage: stages.value.find(x => x.id === stageId)
+      }) as LaptimeWithData)
+      .sort((a, b) => LaptimeUtil.compareLaptimes(a.time, b.time))
+  }
+
+  const getTimesForLocation = (location: Location): LaptimeWithData[] => {
+    return times.value
+      .filter(x => x.locationId === location.id)
       .map(({ carId, driverId, locationId, stageId, ...laptime }) => ({
         ...laptime,
         car: cars.value.find(x => x.id === carId),
@@ -113,6 +126,10 @@ export const useDataStore = defineStore('data', () => {
   const deleteLaptime = async (laptimeId: string) => {
     const docRef = doc(db, 'laptimes', laptimeId)
     await deleteDoc(docRef)
+  }
+
+  const isLocal = () => {
+    return ['127.0.0.1:5173', 'malina:3000', '192.168.0.20:3000'].includes(window.location.host)
   }
 
   // firebase
@@ -199,10 +216,12 @@ export const useDataStore = defineStore('data', () => {
     setActiveStage,
     setCarGroupFilter,
     getTimesForStage,
+    getTimesForLocation,
     addDriver,
     addLaptime,
     updateLaptime,
     deleteLaptime,
+    isLocal,
 
     // firestore
     unsubscribeAll
