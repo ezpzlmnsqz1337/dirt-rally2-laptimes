@@ -1,11 +1,5 @@
 import type { GameData } from "@/model/GameData"
-
-export enum WebsocketState {
-  NOT_YET_ESTABLISHED = 0,
-  ESTABLISHED = 1,
-  IN_CLOSING_HANDSHAKE = 2,
-  CLOSED_OR_COULD_NOT_OPEN = 3
-}
+import { WebsocketState } from "@/model/WebsocketState"
 
 const MAX_RETRY_ATTEMPTS = 3
 
@@ -14,7 +8,7 @@ export type GameDataListener = (message: GameData) => any
 export default class GameDataReceiver {
     static instance: GameDataReceiver
 
-    protected ws: WebSocket | null = null
+    ws: WebSocket | null = null
     protected hostname = window.location.hostname
     protected port = 20779
     protected listeners: GameDataListener[] = []
@@ -77,10 +71,6 @@ export default class GameDataReceiver {
     retry () {
       this.connect(this.hostname, this.port)
       this.retries++
-    }
-
-    getWebsocketState () {
-      return this.ws ? this.ws.readyState : WebsocketState.NOT_YET_ESTABLISHED
     }
 
     getHostname () {

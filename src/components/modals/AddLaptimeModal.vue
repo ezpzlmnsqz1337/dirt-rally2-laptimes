@@ -2,11 +2,12 @@
 import type { Car } from '@/model/Car';
 import type { Driver } from '@/model/Driver';
 import type { Laptime } from '@/model/Laptime';
-import { useDataStore } from '@/stores/data'
+import { useDataStore } from '@/stores/data';
 import { useGameDataStore } from '@/stores/game-data';
-import { storeToRefs } from 'pinia'
-import { ref, computed, watch } from 'vue'
-import LaptimeInput from '../LaptimeInput.vue'
+import { storeToRefs } from 'pinia';
+import { computed, ref, watch } from 'vue';
+import LaptimeInput from '../LaptimeInput.vue';
+import ProviderHostnameSelect from '../ProviderHostnameSelect.vue';
 
 
 // store
@@ -58,6 +59,7 @@ const add = (laptime: Partial<Laptime>) => {
           <h2>Add Laptime</h2>
         </div>
         <div class="__body">
+          <ProviderHostnameSelect />
           <div class="__form">
             <div class="__formRow">
               <label>Driver</label>

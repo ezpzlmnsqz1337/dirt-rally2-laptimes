@@ -1,27 +1,14 @@
 <script setup lang="ts">
-import MapView from './components/MapView.vue'
-import TrackPanel from './components/TrackPanel.vue'
-import ContentPanel from './components/ContentPanel.vue'
+import ContentPanel from './components/ContentPanel.vue';
+import MapView from './components/MapView.vue';
+import TrackPanel from './components/TrackPanel.vue';
 import { useDataStore } from './stores/data';
-import { useGameDataStore } from './stores/game-data';
 
 import { storeToRefs } from 'pinia';
 import { onBeforeUnmount, onMounted } from 'vue';
-import GameDataReceiver from './utils/GameDataReceiver';
-
-const GAME_DATA_PORT = 20779
 
 // store
 const dataStore = useDataStore()
-const gameDataStore = useGameDataStore()
-
-const {
-  providerHostname,
-} = storeToRefs(gameDataStore)
-
-const {
-  parseData
-} = gameDataStore
 
 const {
   leftPanelShow,
@@ -30,15 +17,10 @@ const {
 
 onMounted(() => {
   dataStore.subscribeDb()
-  const receiver = GameDataReceiver.getInstance()
-  receiver.addListener(m => parseData(m))
-  receiver.connect(providerHostname.value, GAME_DATA_PORT)
-
 })
 
 onBeforeUnmount(() => {
   dataStore.unsubscribeAll()
-  GameDataReceiver.getInstance().disconnect()
 })
 </script>
 
@@ -111,6 +93,15 @@ onBeforeUnmount(() => {
     &:hover {
       cursor: pointer;
       background-color: #0045e0;
+    }
+
+    &.__primary {
+      background-color: #015bb6;
+      color: white;
+      &:hover {
+        cursor: pointer;
+        background-color: #0045e0;
+      }
     }
 
     &.__success {
