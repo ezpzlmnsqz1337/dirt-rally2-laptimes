@@ -3,23 +3,42 @@ import MapView from './components/MapView.vue'
 import TrackPanel from './components/TrackPanel.vue'
 import ContentPanel from './components/ContentPanel.vue'
 import { useDataStore } from './stores/data';
+import { useGameDataStore } from './stores/game-data';
+
 import { storeToRefs } from 'pinia';
 import { onBeforeUnmount, onMounted } from 'vue';
+import GameDataReceiver from './utils/GameDataReceiver';
+
+const GAME_DATA_PORT = 20779
 
 // store
-const store = useDataStore()
+const dataStore = useDataStore()
+const gameDataStore = useGameDataStore()
+
+const {
+  providerHostname,
+} = storeToRefs(gameDataStore)
+
+const {
+  parseData
+} = gameDataStore
 
 const {
   leftPanelShow,
   rightPanelShow,
-} = storeToRefs(store)
+} = storeToRefs(dataStore)
 
 onMounted(() => {
-  store.subscribeDb()
+  dataStore.subscribeDb()
+  const receiver = GameDataReceiver.getInstance()
+  receiver.addListener(m => parseData(m))
+  receiver.connect(providerHostname.value, GAME_DATA_PORT)
+
 })
 
 onBeforeUnmount(() => {
-  store.unsubscribeAll()
+  dataStore.unsubscribeAll()
+  GameDataReceiver.getInstance().disconnect()
 })
 </script>
 
