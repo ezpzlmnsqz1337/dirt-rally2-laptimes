@@ -5,10 +5,13 @@ const MAX_RETRY_ATTEMPTS = 3
 
 export type GameDataListener = (message: GameData) => any
 
+export type OnOpenCallback = (this: WebSocket, ev: Event) => any
+export type OnCloseCallback = (this: WebSocket, ev: CloseEvent) => any
+
 export default class GameDataReceiver {
     static instance: GameDataReceiver
 
-    ws: WebSocket | null = null
+    protected ws: WebSocket | null = null
     protected hostname = window.location.hostname
     protected port = 20779
     protected listeners: GameDataListener[] = []
@@ -22,26 +25,33 @@ export default class GameDataReceiver {
       return GameDataReceiver.instance
     }
 
-    connect (hostname: string, port: number) {
+    connect (hostname: string, port: number, onOpen: OnOpenCallback, onClose: OnCloseCallback) {
       this.hostname = hostname
       this.port = port
+
+      if (this.ws) this.ws.close()
+
       this.ws = new WebSocket(`ws://${hostname}:${port}`)
-      this.ws.onmessage = message => {
-        try {
-          const data = JSON.parse(message.data) as GameData
-          // console.log('Received: ', data)
-          this.listeners.forEach(x => x(data))
-        } catch (e: unknown) {
-          console.log('Error: ', (e as SyntaxError).message, message)
-        }
-      }
+      this.ws.onopen = onOpen
+      this.ws.onclose = onClose
+      this.ws.onmessage = m => this.onMessage(m)
 
       if (!this.retryHandler) this.setupRetryHandler()
     }
 
+    private onMessage(message: MessageEvent) {
+      try {
+        const data = JSON.parse(message.data) as GameData
+        // console.log('Received: ', data)
+        this.listeners.forEach(x => x(data))
+      } catch (e: unknown) {
+        console.log('Error: ', (e as SyntaxError).message, message)
+      }
+    }
+
     disconnect () {
       clearInterval(this.retryHandler)
-      this.ws!.close()
+      this.ws?.close()
     }
 
     setupRetryHandler () {
@@ -69,11 +79,8 @@ export default class GameDataReceiver {
     }
 
     retry () {
-      this.connect(this.hostname, this.port)
+      if (!this.ws) return
+      this.connect(this.hostname, this.port, this.ws.onopen!, this.ws.onclose!)
       this.retries++
-    }
-
-    getHostname () {
-      return this.hostname
     }
 }

@@ -31,15 +31,16 @@ export const useGameDataStore = defineStore('game-data', () => {
 
   const connect = (hostname: string, port: number) => {
     setProviderHostname(hostname)
-    websocketState.value = WebsocketState.ESTABLISHED
+
     const receiver = GameDataReceiver.getInstance()
-    receiver.connect(hostname, port)
+    receiver.connect(hostname, port,
+      () => websocketState.value = WebsocketState.ESTABLISHED,
+      () => websocketState.value = WebsocketState.CLOSED_OR_COULD_NOT_OPEN)
     receiver.addListener(m => parseData(m))
   }
 
   const disconnect = () => {
     GameDataReceiver.getInstance().disconnect()
-    websocketState.value = WebsocketState.CLOSED_OR_COULD_NOT_OPEN
   }
 
   const parseData = (data: GameData) => {
