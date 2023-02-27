@@ -1,25 +1,26 @@
 <script setup lang="ts">
-import MapView from './components/MapView.vue'
-import TrackPanel from './components/TrackPanel.vue'
-import ContentPanel from './components/ContentPanel.vue'
+import ContentPanel from './components/ContentPanel.vue';
+import MapView from './components/MapView.vue';
+import TrackPanel from './components/TrackPanel.vue';
 import { useDataStore } from './stores/data';
+
 import { storeToRefs } from 'pinia';
 import { onBeforeUnmount, onMounted } from 'vue';
 
 // store
-const store = useDataStore()
+const dataStore = useDataStore()
 
 const {
   leftPanelShow,
   rightPanelShow,
-} = storeToRefs(store)
+} = storeToRefs(dataStore)
 
 onMounted(() => {
-  store.subscribeDb()
+  dataStore.subscribeDb()
 })
 
 onBeforeUnmount(() => {
-  store.unsubscribeAll()
+  dataStore.unsubscribeAll()
 })
 </script>
 
@@ -92,6 +93,15 @@ onBeforeUnmount(() => {
     &:hover {
       cursor: pointer;
       background-color: #0045e0;
+    }
+
+    &.__primary {
+      background-color: #015bb6;
+      color: white;
+      &:hover {
+        cursor: pointer;
+        background-color: #0045e0;
+      }
     }
 
     &.__success {

@@ -2,14 +2,21 @@
 import type { Car } from '@/model/Car';
 import type { Driver } from '@/model/Driver';
 import type { Laptime } from '@/model/Laptime';
-import { useDataStore } from '@/stores/data'
-import { storeToRefs } from 'pinia'
-import { ref, computed, watch } from 'vue'
-import LaptimeInput from '../LaptimeInput.vue'
+import { useDataStore } from '@/stores/data';
+import { useGameDataStore } from '@/stores/game-data';
+import { storeToRefs } from 'pinia';
+import { computed, ref, watch } from 'vue';
+import LaptimeInput from '../LaptimeInput.vue';
+import ProviderHostnameSelect from '../ProviderHostnameSelect.vue';
 
 
 // store
 const store = useDataStore()
+const gameDataStore = useGameDataStore()
+
+const {
+  laptime,
+} = storeToRefs(gameDataStore)
 
 const {
   cars,
@@ -52,6 +59,7 @@ const add = (laptime: Partial<Laptime>) => {
           <h2>Add Laptime</h2>
         </div>
         <div class="__body">
+          <ProviderHostnameSelect />
           <div class="__form">
             <div class="__formRow">
               <label>Driver</label>
@@ -68,7 +76,7 @@ const add = (laptime: Partial<Laptime>) => {
             </div>
             <div class="__formRow">
               <label>Time</label>
-              <LaptimeInput @changed="time = $event" />
+              <LaptimeInput :value="laptime" @changed="time = $event" />
             </div>
             <div class="__formRow">
               <button class="__btn __success" :disabled="time === null" @click="add({

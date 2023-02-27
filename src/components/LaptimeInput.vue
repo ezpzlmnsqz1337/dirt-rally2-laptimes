@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import type { Laptime } from '@/model/Laptime'
 import LaptimeUtil from '@/utils/LaptimeUtil'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 
 export interface Props {
-  value?: Laptime | null
+  value?: number
   disabled?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  value: null,
+  value: 0,
   disabled: false
 })
 
@@ -37,9 +36,15 @@ const laptime = computed(() => {
   return LaptimeUtil.isLaptimeValid(m, s, ms) ? LaptimeUtil.laptimeFromComponents(m, s, ms) : undefined
 })
 
+watch(() => props.value, newLaptime => {
+  if(newLaptime) {
+    setLaptime(newLaptime)
+  }
+})
+
 onMounted(() => {
   if (props.value) {
-    setLaptime(props.value.time)
+    setLaptime(props.value)
   }
 })
 
@@ -71,11 +76,12 @@ const onLaptimeInput = () => {
   }
 }
 
-const setLaptime = (laptime: string) => {
-  const d = LaptimeUtil.laptimeToDate(laptime)
+const setLaptime = (laptime: number) => {
+  const d = new Date(laptime*1000)
   minutes.value = `${d?.getMinutes()}`
   seconds.value = `${d?.getSeconds()}`.padStart(2, '0')
   milliseconds.value = `${d?.getMilliseconds()}`.padStart(3, '0')
+  onLaptimeInput()
 }
 
 const validateLaptimeFormat = () => {

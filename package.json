@@ -21,6 +21,7 @@
     "uuid": "^9.0.0",
     "vue": "^3.2.45",
     "vue-select": "4.0.0-beta.6",
+    "vue-spinner": "^1.0.4",
     "vue3-google-map": "^0.15.0"
   },
   "devDependencies": {
