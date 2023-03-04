@@ -39,9 +39,9 @@ const carsByGroup = computed(() => {
   return cars.value.filter(car => carGroupFilter.value === 'Any' || car.group === carGroupFilter.value)
 })
 
-const driverId = ref(drivers.value[0].id)
+const driverId = ref(drivers.value[0]?.id)
 const time = ref<string | null>(null)
-const carId = ref(carsByGroup.value[0].id)
+const carId = ref(carsByGroup.value[0]?.id)
 
 watch(carGroupFilter, () => carId.value = Number(carsByGroup.value[0].id))
 

@@ -59,10 +59,10 @@ const showModal = (modal: ModalType) => {
         <CarGroupFilter class="__carGroupFilter" />
         <TimeTable :times="getTimesForStage(activeStage)" :group="carGroupFilter" />
         <div v-if="isLocal()" class="__btn __success" @click="showModal('laptime')">Add Laptime</div>
-        <AddLaptimeModal v-show="showAddLaptimeModal" @close="showAddLaptimeModal = false" @show-add-driver-modal="showModal('driver')" />
-        <AddDriverModal v-show="showAddDriverModal" @close="showModal('laptime')"  />
       </div>
     </div>
+    <AddLaptimeModal v-show="showAddLaptimeModal" @close="showAddLaptimeModal = false" @show-add-driver-modal="showModal('driver')" />
+    <AddDriverModal v-show="showAddDriverModal" @close="showModal('laptime')"  />
   </div>
 </template>
 
