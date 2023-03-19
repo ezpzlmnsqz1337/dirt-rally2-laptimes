@@ -16,6 +16,7 @@ export const useGameDataStore = defineStore('game-data', () => {
   const websocketState = ref<WebsocketState>(WebsocketState.CLOSED_OR_COULD_NOT_OPEN)
   const laptime = ref<number>(0)
   const inMenu = ref<boolean>(true)
+  const finishedSuccessfully = ref<boolean>(false)
 
   const setLaptime = (time: number) => {
     laptime.value = time
@@ -23,6 +24,10 @@ export const useGameDataStore = defineStore('game-data', () => {
 
   const setInMenu = (_inMenu: boolean) => {
     inMenu.value = _inMenu
+  }
+
+  const setFinishedSuccessfully = (finished: boolean) => {
+    finishedSuccessfully.value = finished
   }
 
   const setProviderHostname = (hostname: string) => {
@@ -47,6 +52,7 @@ export const useGameDataStore = defineStore('game-data', () => {
     if (HOSTS[data.origin] === providerHostname.value) {
       setLaptime(data.laptime)
       setInMenu(data.inMenu)
+      setFinishedSuccessfully(data.finishedSuccessfully)
     }
   }
 
@@ -54,6 +60,7 @@ export const useGameDataStore = defineStore('game-data', () => {
     // state
     laptime: readonly(laptime),
     inMenu: readonly(inMenu),
+    finishedSuccessfully: readonly(finishedSuccessfully),
     websocketState: readonly(websocketState),
     providerHostname: readonly(providerHostname),
 
