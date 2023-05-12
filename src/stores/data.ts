@@ -28,7 +28,7 @@ export const useDataStore = defineStore('data', () => {
   const subs = ref<Subscription[]>([])
   const cars = ref<Car[]>(carsDb)
   const locations = ref<Location[]>(locationsDb.rally)
-  const stages = ref<Stage[]>([])
+  const stages = ref<Stage[]>(locationsDb.rally.flatMap(location => [...location.forward, ...location.reverse]))
   const drivers = ref<Driver[]>([])
   const times = ref<Laptime[]>([])
   const activeLocation = ref<Location | null>(null)
@@ -91,6 +91,15 @@ export const useDataStore = defineStore('data', () => {
   }
 
   const getTimesForLocation = (location: Location): LaptimeWithData[] => {
+    console.log(times.value
+      .filter(x => x.locationId === location.id)
+      .map(({ carId, driverId, locationId, stageId, ...laptime }) => ({
+        ...laptime,
+        car: cars.value.find(x => x.id === carId),
+        driver: drivers.value.find(x => x.id === driverId),
+        location: locations.value.find(x => x.id === locationId),
+        stage: stages.value.find(x => x.id === stageId)
+      }) as LaptimeWithData))
     return times.value
       .filter(x => x.locationId === location.id)
       .map(({ carId, driverId, locationId, stageId, ...laptime }) => ({

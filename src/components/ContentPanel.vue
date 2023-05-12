@@ -6,10 +6,13 @@ import CarGroupFilter from '@/components/CarGroupFilter.vue';
 import TimeTable from '@/components/TimeTable.vue';
 import AddLaptimeModal from '@/components/modals/AddLaptimeModal.vue';
 import AddDriverModal from '@/components/modals/AddDriverModal.vue';
+import EditLaptimeModal from '@/components/modals/EditLaptimeModal.vue';
 
 import { ref } from 'vue';
+import type { LaptimeWithData } from '@/model/LaptimeWithData';
+import type { Laptime } from '@/model/Laptime';
 
-type ModalType = 'driver' | 'laptime';
+type ModalType = 'add-driver' | 'add-laptime' | 'edit-laptime';
 
 // store
 const store = useDataStore()
@@ -31,15 +34,32 @@ const close = () => {
 }
 
 const showAddLaptimeModal = ref(false)
+const showEditLaptimeModal = ref(false)
 const showAddDriverModal = ref(false)
+const laptimeToEdit = ref<Laptime | undefined>(undefined)
+
+const onRowClicked = (laptime: LaptimeWithData) => {
+  if (!isLocal()) { return }
+  laptimeToEdit.value = laptime as Laptime
+  showModal('edit-laptime')
+}
 
 const showModal = (modal: ModalType) => {
-  if (modal === 'driver') {
-    showAddLaptimeModal.value = false
-    showAddDriverModal.value = true
-  } else {
-    showAddLaptimeModal.value = true
-    showAddDriverModal.value = false
+  showAddLaptimeModal.value = false
+  showEditLaptimeModal.value = false
+  showAddDriverModal.value = false
+  switch (modal) {
+    case 'add-laptime':
+      showAddLaptimeModal.value = true
+      break
+    case 'edit-laptime':
+      showEditLaptimeModal.value = true
+      break
+    case 'add-driver':
+      showAddDriverModal.value = true
+      break
+    default:
+      console.log(`Unknown modal type: ${modal}`)
   }
 }
 
@@ -57,12 +77,16 @@ const showModal = (modal: ModalType) => {
       <h3>{{ activeStage.name }}</h3>
       <div class="__table">
         <CarGroupFilter class="__carGroupFilter" />
-        <TimeTable :times="getTimesForStage(activeStage)" :group="carGroupFilter" />
-        <div v-if="isLocal()" class="__btn __success" @click="showModal('laptime')">Add Laptime</div>
+        <TimeTable :times="getTimesForStage(activeStage)" :group="carGroupFilter"
+          @row-clicked="onRowClicked($event)" />
+        <div v-if="isLocal()" class="__btn __success" @click="showModal('add-laptime')">Add Laptime</div>
       </div>
     </div>
-    <AddLaptimeModal v-show="showAddLaptimeModal" @close="showAddLaptimeModal = false" @show-add-driver-modal="showModal('driver')" />
-    <AddDriverModal v-show="showAddDriverModal" @close="showModal('laptime')"  />
+    <AddLaptimeModal v-show="showAddLaptimeModal" @close="showAddLaptimeModal = false"
+      @show-add-driver-modal="showModal('add-driver')" />
+    <AddDriverModal v-show="showAddDriverModal" @close="showModal('add-driver')" />
+    <EditLaptimeModal v-if="showEditLaptimeModal" @close="showEditLaptimeModal = false"
+      @show-add-driver-modal="showModal('add-driver')" :laptime="laptimeToEdit" />
   </div>
 </template>
 
@@ -109,5 +133,4 @@ const showModal = (modal: ModalType) => {
       padding: 0;
     }
   }
-}
-</style>
+}</style>

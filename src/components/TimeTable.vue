@@ -18,6 +18,10 @@ const props = withDefaults(defineProps<Props>(), {
   showStage: false
 })
 
+const emit = defineEmits<{
+  (e: 'row-clicked', laptime: LaptimeWithData): void
+}>()
+
 const columns = computed(() =>
   ['Position', 'Driver', 'Time', 'Losing', 'Car', 'Group', 'Location', 'Stage']
     .filter(x => (!props.showStage && x !== 'Stage') && (!props.showLocation && x !== 'Location'))
@@ -36,7 +40,7 @@ const rows = computed(() => {
           {{ c }}
         </th>
       </tr>
-      <tr v-for="(time, index) in rows" :key="time.id">
+      <tr v-for="(time, index) in rows" :key="time.id" @click="emit('row-clicked', time)">
         <td class="__position">
           {{ index + 1 }}.
         </td>
