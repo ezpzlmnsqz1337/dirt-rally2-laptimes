@@ -31,24 +31,12 @@ const {
 
 // data
 const mapRef = ref<typeof GoogleMap | null>(null);
-const infoWinOpen = ref(false);
-const infoOptions = ref({});
 const hoverStage = ref<Stage | null>(null);
-const circleOptions = ref({});
 const center = ref<Coordinates>({ lat: 30, lng: 35 });
 const pins = {
   selected: `data:image/png;base64,${markerSelected64x64}`,
   notSelected: `data:image/png;base64,${marker64x64}`
 };
-const mapStyle = [];
-const clusterStyle = [
-  {
-    url: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m1.png',
-    width: 56,
-    height: 56,
-    textColor: '#fff'
-  }
-];
 let zooming: any | null = null;
 let panning: any | null = null;
 
