@@ -28,7 +28,7 @@ export const useDataStore = defineStore('data', () => {
   const subs = ref<Subscription[]>([])
   const cars = ref<Car[]>(carsDb)
   const locations = ref<Location[]>(locationsDb.rally)
-  const stages = ref<Stage[]>([])
+  const stages = ref<Stage[]>(locationsDb.rally.flatMap(location => [...location.forward, ...location.reverse]))
   const drivers = ref<Driver[]>([])
   const times = ref<Laptime[]>([])
   const activeLocation = ref<Location | null>(null)

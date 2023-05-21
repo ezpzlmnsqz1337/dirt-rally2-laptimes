@@ -30,6 +30,12 @@
   }
 }
 
+@media screen and (max-width: 1500px) {
+  .__modal {
+    width: 60%
+  }
+}
+
 @media screen and (max-width: 768px) {
   .__modal {
     width: calc(100% - 2rem)
