@@ -91,15 +91,6 @@ export const useDataStore = defineStore('data', () => {
   }
 
   const getTimesForLocation = (location: Location): LaptimeWithData[] => {
-    console.log(times.value
-      .filter(x => x.locationId === location.id)
-      .map(({ carId, driverId, locationId, stageId, ...laptime }) => ({
-        ...laptime,
-        car: cars.value.find(x => x.id === carId),
-        driver: drivers.value.find(x => x.id === driverId),
-        location: locations.value.find(x => x.id === locationId),
-        stage: stages.value.find(x => x.id === stageId)
-      }) as LaptimeWithData))
     return times.value
       .filter(x => x.locationId === location.id)
       .map(({ carId, driverId, locationId, stageId, ...laptime }) => ({

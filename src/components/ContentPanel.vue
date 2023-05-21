@@ -32,11 +32,8 @@ const {
 const close = () => {
   setActiveStage(null)
 }
-
-const showAddLaptimeModal = ref(false)
-const showEditLaptimeModal = ref(false)
-const showAddDriverModal = ref(false)
 const laptimeToEdit = ref<Laptime | undefined>(undefined)
+const modals = ref<ModalType[]>([])
 
 const onRowClicked = (laptime: LaptimeWithData) => {
   if (!isLocal()) { return }
@@ -44,23 +41,16 @@ const onRowClicked = (laptime: LaptimeWithData) => {
   showModal('edit-laptime')
 }
 
+const isModalActive = (modal: ModalType) => {
+  return modals.value.length > 0 && modals.value[modals.value.length - 1] === modal
+}
+
 const showModal = (modal: ModalType) => {
-  showAddLaptimeModal.value = false
-  showEditLaptimeModal.value = false
-  showAddDriverModal.value = false
-  switch (modal) {
-    case 'add-laptime':
-      showAddLaptimeModal.value = true
-      break
-    case 'edit-laptime':
-      showEditLaptimeModal.value = true
-      break
-    case 'add-driver':
-      showAddDriverModal.value = true
-      break
-    default:
-      console.log(`Unknown modal type: ${modal}`)
-  }
+  modals.value.push(modal)
+}
+
+const closeModal = () => {
+  modals.value.pop()
 }
 
 </script>
@@ -77,15 +67,14 @@ const showModal = (modal: ModalType) => {
       <h3>{{ activeStage.name }}</h3>
       <div class="__table">
         <CarGroupFilter class="__carGroupFilter" />
-        <TimeTable :times="getTimesForStage(activeStage)" :group="carGroupFilter"
-          @row-clicked="onRowClicked($event)" />
+        <TimeTable :times="getTimesForStage(activeStage)" :group="carGroupFilter" @row-clicked="onRowClicked($event)" />
         <div v-if="isLocal()" class="__btn __success" @click="showModal('add-laptime')">Add Laptime</div>
       </div>
     </div>
-    <AddLaptimeModal v-show="showAddLaptimeModal" @close="showAddLaptimeModal = false"
+    <AddLaptimeModal v-show="isModalActive('add-laptime')" @close="closeModal()"
       @show-add-driver-modal="showModal('add-driver')" />
-    <AddDriverModal v-show="showAddDriverModal" @close="showModal('add-driver')" />
-    <EditLaptimeModal v-if="showEditLaptimeModal" @close="showEditLaptimeModal = false"
+    <AddDriverModal v-show="isModalActive('add-driver')" @close="closeModal()" />
+    <EditLaptimeModal v-if="isModalActive('edit-laptime')" @close="closeModal()"
       @show-add-driver-modal="showModal('add-driver')" :laptime="laptimeToEdit" />
   </div>
 </template>
@@ -133,4 +122,5 @@ const showModal = (modal: ModalType) => {
       padding: 0;
     }
   }
-}</style>
+}
+</style>

@@ -86,6 +86,7 @@ const rows = computed(() => {
     tr {
       &:hover {
         background-color: #0045E0;
+        cursor: pointer;
       }
 
       &:first-child {
@@ -104,6 +105,7 @@ const rows = computed(() => {
 
         &.__losing {
           color: #cb0b2b;
+          min-width: 5rem;
 
           span {
             // font-weight: bold;

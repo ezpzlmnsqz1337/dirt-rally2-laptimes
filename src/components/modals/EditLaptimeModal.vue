@@ -35,7 +35,7 @@ const emit = defineEmits<{
 const driverId = ref<string | undefined>(props.laptime?.driver?.id)
 const time = ref<string | undefined>(props.laptime?.time)
 const carId = ref<number | undefined>(props.laptime?.car?.id)
-const laptime = ref<number | undefined>(LaptimeUtil.laptimeToDate(props.laptime!.time)?.getTime()! / 1000)
+const laptime = ref<number | undefined>(props.laptime?.time ? LaptimeUtil.laptimeToDate(props.laptime.time)?.getTime()! / 1000 : 0)
 
 const save = () => {
   updateLaptime({
