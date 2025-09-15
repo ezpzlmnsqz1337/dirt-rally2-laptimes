@@ -129,7 +129,7 @@ export const useDataStore = defineStore('data', () => {
   }
 
   const isLocal = () => {
-    return ['127.0.0.1:5173', 'malina:3000', '192.168.0.20:3000'].includes(window.location.host)
+    return ['127.0.0.1:5173', 'dirt2.homelab.net'].includes(window.location.host)
   }
 
   // firebase

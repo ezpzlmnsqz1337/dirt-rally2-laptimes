@@ -26,10 +26,10 @@ const {
 } = dataStore
 
 const connecting = ref<boolean>(false)
-const host = ref<string>('192.168.0.191')
+const host = ref<string>('192.168.0.41')
 const wsHosts = [
-  { label: 'wallpc', value: '192.168.0.191'},
-  { label: 'deskpc', value: '192.168.0.215' }
+  { label: 'wallpc', value: '192.168.0.41'},
+  { label: 'deskpc', value: '192.168.0.42' }
 ]
 
 const websocketStateText = computed(() => {
