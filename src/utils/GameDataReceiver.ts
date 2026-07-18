@@ -1,5 +1,4 @@
 import type { GameData } from "@/model/GameData"
-import { WebsocketState } from "@/model/WebsocketState"
 
 const MAX_RETRY_ATTEMPTS = 3
 
@@ -60,7 +59,7 @@ export default class GameDataReceiver {
           clearInterval(this.retryHandler)
           return
         }
-        if (this.ws!.readyState !== WebsocketState.ESTABLISHED) {
+        if (this.ws!.readyState !== WebSocket.OPEN) {
           this.retry()
           console.log(`Retry WS connection attempt ${this.retries}/${MAX_RETRY_ATTEMPTS}`)
         } else {

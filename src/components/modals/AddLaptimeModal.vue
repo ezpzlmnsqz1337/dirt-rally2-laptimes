@@ -2,7 +2,7 @@
 import type { Car } from '@/model/Car';
 import type { Driver } from '@/model/Driver';
 import type { Laptime } from '@/model/Laptime';
-import { WebsocketState } from '@/model/WebsocketState';
+import { WS_OPEN } from '@/model/websocket-constants';
 import { useDataStore } from '@/stores/data';
 import { useGameDataStore } from '@/stores/game-data';
 import LaptimeUtil from '@/utils/LaptimeUtil';
@@ -115,7 +115,7 @@ const add = (laptimeToAdd: string) => {
             <label>Time</label>
             <LaptimeInput :value="laptime" @changed="time = $event" />
           </div>
-          <div class="__formRow" v-if="websocketState !== WebsocketState.ESTABLISHED">
+          <div class="__formRow" v-if="websocketState !== WS_OPEN">
             <button class="__btn __success" :disabled="time === null" @click="add(time!)">
               Add
             </button>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WebsocketState } from '@/model/WebsocketState';
+import { WS_OPEN } from '@/model/websocket-constants';
 import { useGameDataStore } from '@/stores/game-data';
 
 import { useDataStore } from '@/stores/data';
@@ -33,13 +33,13 @@ const wsHosts = [
 ]
 
 const websocketStateText = computed(() => {
-  return websocketState.value === WebsocketState.ESTABLISHED ? 'Connected' : 'Not connected'
+  return websocketState.value === WS_OPEN ? 'Connected' : 'Not connected'
 })
 
 const websocketStateClass = computed(() => {
   return {
-    __connected: websocketState.value === WebsocketState.ESTABLISHED,
-    __notConnected: websocketState.value !== WebsocketState.ESTABLISHED
+    __connected: websocketState.value === WS_OPEN,
+    __notConnected: websocketState.value !== WS_OPEN
   }
 })
 
@@ -65,13 +65,13 @@ const raceStateClass = computed(() => {
       <div>
         <span>Websocket state: </span>
         <span :class="websocketStateClass">{{ websocketStateText }}</span>
-        <div v-if="websocketState === WebsocketState.ESTABLISHED && raceStateText">
-          <span>Race state: </span>
-          <span :class="raceStateClass">{{ raceStateText }}</span>
+          <div v-if="websocketState === WS_OPEN && raceStateText">
+            <span>Race state: </span>
+            <span :class="raceStateClass">{{ raceStateText }}</span>
+          </div>
         </div>
-      </div>
-      <div
-        v-if="websocketState === WebsocketState.ESTABLISHED"
+        <div
+          v-if="websocketState === WS_OPEN"
         class="__disconnect"
       >
         <div class="__btn __danger" @click="disconnect()">
@@ -81,7 +81,7 @@ const raceStateClass = computed(() => {
     </div>
 
     <div
-      v-if="!connecting && websocketState !== WebsocketState.ESTABLISHED"
+      v-if="!connecting && websocketState !== WS_OPEN"
       class="__connect"
     >
       <v-select
@@ -102,7 +102,7 @@ const raceStateClass = computed(() => {
   </div>
 
   <div
-    v-if="connecting && websocketState !== WebsocketState.ESTABLISHED"
+      v-if="connecting && websocketState !== WS_OPEN"
     class="__connecting"
   >
     <PulseLoader

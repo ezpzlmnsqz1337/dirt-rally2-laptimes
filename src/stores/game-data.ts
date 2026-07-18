@@ -1,7 +1,5 @@
-import type { Unsubscribe } from 'firebase/firestore'
 import type { GameData } from '../model/GameData'
 
-import { WebsocketState } from '@/model/WebsocketState'
 import GameDataReceiver from '@/utils/GameDataReceiver'
 import { defineStore } from 'pinia'
 import { readonly, ref } from 'vue'
@@ -13,7 +11,7 @@ const HOSTS: Record<string,string> = {
 
 export const useGameDataStore = defineStore('game-data', () => {
   const providerHostname = ref<string>('192.168.0.41')
-  const websocketState = ref<WebsocketState>(WebsocketState.CLOSED_OR_COULD_NOT_OPEN)
+  const websocketState = ref<number>(WebSocket.CLOSED)
   const laptime = ref<number>(0)
   const inMenu = ref<boolean>(true)
   const finishedSuccessfully = ref<boolean>(false)
@@ -39,8 +37,8 @@ export const useGameDataStore = defineStore('game-data', () => {
 
     const receiver = GameDataReceiver.getInstance()
     receiver.connect(hostname, port,
-      () => websocketState.value = WebsocketState.ESTABLISHED,
-      () => websocketState.value = WebsocketState.CLOSED_OR_COULD_NOT_OPEN)
+      () => websocketState.value = WebSocket.OPEN,
+      () => websocketState.value = WebSocket.CLOSED)
     receiver.addListener(m => parseData(m))
   }
 
@@ -71,7 +69,3 @@ export const useGameDataStore = defineStore('game-data', () => {
   }
 })
 
-export interface Subscription {
-  key: string
-  unsubscribe: Unsubscribe
-}
