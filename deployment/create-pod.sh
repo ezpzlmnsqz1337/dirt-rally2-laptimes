@@ -60,7 +60,7 @@ podman run -d \
   --name dirt-rally2-laptimes-api \
   --pod dirt-rally2-laptimes \
   --memory=128m \
-  -e PGRST_DB_URI="postgres://postgres:${DB_PASSWORD}@localhost:5432/dirt-rally2-laptimes" \
+  -e PGRST_DB_URI="postgres://postgres:${DB_PASSWORD}@localhost:5432/postgres" \
   -e PGRST_DB_SCHEMA=public \
   -e PGRST_DB_ANON_ROLE=postgres \
   -e PGRST_DB_CHANNEL_ENABLED=false \
