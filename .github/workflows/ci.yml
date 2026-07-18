@@ -33,7 +33,9 @@ jobs:
         run: npm ci
 
       - name: Setup env vars
-        run: echo "VITE_GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" > .env
+        run: |
+          echo "VITE_GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" > .env
+          echo "VITE_GOOGLE_MAPS_MAP_ID=${{ secrets.GOOGLE_MAPS_MAP_ID }}" >> .env
 
       - name: Run linter 👀
         run: npm run lint

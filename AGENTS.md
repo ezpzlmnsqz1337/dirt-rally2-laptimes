@@ -5,7 +5,7 @@
 **DiRT Rally 2.0 Lap Times Tracker** — A Vue 3 + TypeScript single-page web application for tracking and browsing rally stage lap times. Full-screen Google Map with location markers, left sidebar (location list → stage list drill-down), right sidebar (time table per stage with car group filter). No Vue Router; navigation is state-driven via Pinia.
 
 **Status**: Work in Progress
-**Branch Context**: `main` — Using Firestore for data, planning migration to PostgreSQL + PostgREST (same pattern as pc2-laptimes).
+**Branch Context**: `main` — Migrated from Firestore to PostgreSQL + PostgREST (same pattern as pc2-laptimes).
 
 ## Tech Stack
 
@@ -22,9 +22,10 @@
   - flagpack (country flags)
 
 ### Backend
-- **Database**: Firestore (Firebase)
-- **Hosting**: Firebase Hosting (production) / Podman + nginx (homelab)
-- **Deployment**: GitHub Actions → Firebase Hosting on merge to `main`. Homelab via `deploy.sh` + `Dockerfile` (`TARGET=malina`).
+- **Database**: PostgreSQL 17
+- **API**: PostgREST (auto-generated REST API from PostgreSQL schema)
+- **Container Platform**: Podman pod with Postgres + PostgREST + Adminer
+- **Deployment**: Homelab via `deploy.sh` + `Dockerfile` (`TARGET=malina`)
 
 ### Key Features
 1. **Browse Times**: Click location marker or sidebar item → stages → time table sorted by driver/car
@@ -38,13 +39,12 @@
 ```
 src/
 ├── assets/
-│   ├── css/           # Global CSS (legacy, unused)
-│   ├── db/            # Static game data: cars, locations, stages
-│   └── map/           # GeoJSON, KML, marker icons (base64 + PNG)
+│   ├── db/            # SQL migration scripts (create_tables.sql, grant_permissions.sql) + static game data (cars, locations)
+│   └── map/           # GeoJSON, marker icons (base64)
 ├── components/        # Vue SFC components
 │   └── modals/        # AddLaptime, AddDriver, EditLaptime modals
 ├── model/             # TypeScript interfaces and enums
-├── plugins/           # Firebase init and config
+├── plugins/           # api.ts (PostgREST fetch wrappers), googleMaps.ts (Maps API loader)
 ├── scss/              # Shared SCSS partials (_global.scss, _modal.scss)
 ├── stores/            # Pinia stores (data.ts, game-data.ts)
 └── utils/             # GameDataReceiver (WebSocket), LaptimeUtil
@@ -72,16 +72,33 @@ Two Pinia stores:
 
 ### `useDataStore` (data.ts)
 - Static data: `cars` (80+ cars/group), `locations` (13 rally locations with stages)
-- Firestore-synced: `drivers`, `laptimes` collections via `onSnapshot`
-- CRUD actions: `addDriver`, `addLaptime`, `editLaptime`, `deleteLaptime`
+- PostgREST-synced: `drivers`, `times` tables fetched on mount via `fetchAll()`
+- CRUD actions: `addDriver`, `addLaptime`, `updateLaptime`, `deleteLaptime` → POST/PATCH/DELETE to PostgREST
 - Panel state: `activeLocation`, `activeStage`, panel visibility flags
-- Offline: `enableIndexedDbPersistence`
 - `isLocal()`: true when host is `127.0.0.1:5173` or `dirt2.homelab.net`
 
 ### `useGameDataStore` (game-data.ts)
 - WebSocket connection via `GameDataReceiver` singleton
 - Tracks: `laptime`, `inMenu`, `finishedSuccessfully`
 - Hardcoded host IPs (wallpc, deskpc)
+
+## API Layer
+
+`src/plugins/api.ts` provides `apiGet`, `apiPost`, `apiPatch`, `apiDelete` wrappers around `fetch()` to PostgREST. Uses `ts-case-convert` for snake_case ↔ camelCase conversion.
+
+PostgREST URL: `http://localhost:3001` (dev) / `http://192.168.0.102:3001` (homelab).
+
+## Database
+
+Two tables (see `src/assets/db/create_tables.sql`):
+
+```sql
+drivers: uid UUID PK, name VARCHAR(100)
+times:   uid UUID PK, driver_id UUID FK→drivers, car_id INT, location_id INT, stage_id INT,
+         time VARCHAR(10), timestamp BIGINT, notes TEXT
+```
+
+Static game data (cars, locations, stages) stays in the frontend — they don't change.
 
 ## Navigation (State-Driven)
 
@@ -105,6 +122,7 @@ No Vue Router. All navigation via store state:
 - Static DB data in `src/assets/db/` as typed arrays/objects
 - No `any` — use proper types
 - Shim `.d.ts` files for JS libs without types
+- `ts-case-convert` for snake↔camel case conversion on API calls
 
 ### Vue Components
 - Composition API with `<script setup>`
@@ -123,11 +141,10 @@ No Vue Router. All navigation via store state:
 
 ## Known Issues / Next Steps
 
-1. **Firestore rules expired** (July 2022): Writes fail silently in production
-2. **Firebase API key exposed** in `src/plugins/firebaseConfig.ts`
-3. **Rallycross data present but not surfaced** in UI (no rallycross tab/panel)
-4. **No router**: State-driven navigation works but lacks URL shareability
-5. **WebSocket requires manual stage selection**: Dirt2 telemetry doesn't emit track ID, so user must select stage before racing
+1. **No real-time sync**: Data is fetched once on mount. Clients don't see each other's updates until page reload. Plan: add WebSocket relay (same pattern as pc2-laptimes)
+2. **No router**: State-driven navigation works but lacks URL shareability
+3. **WebSocket requires manual stage selection**: Dirt2 telemetry doesn't emit track ID, so user must select stage before racing
+4. **No authentication on PostgREST**: Uses `postgres` superuser role (trusted LAN)
 
 ## Setup
 
@@ -140,8 +157,8 @@ npm run dev
 
 ## MCP Servers Used
 
-- **Context7** — fetch current library/API documentation (e.g. `vue3-google-map`)
-- **Chrome DevTools** — inspect running app, check console errors, take snapshots
+- **Context7** — fetch current library/API documentation
+- **Chrome DevTools** — inspect running app, check console errors
 
 ## Testing
 
@@ -152,9 +169,8 @@ npm run dev
 
 ## Deployment
 
-- **Firebase Hosting**: Auto-deployed on merge to `main` via `.github/workflows/firebase-hosting-merge.yml`
 - **Homelab**: `TARGET=malina npm run build && npm run deploy:homelab` — builds, SCPs to `hosting@hosting`, restarts systemd unit
-- **Emulators**: `firebase.json` configures Firestore emulator on port 8080
+- **Database init**: Run `src/assets/db/create_tables.sql` then `grant_permissions.sql` against the Postgres container once
 
 ## Commit Conventions
 

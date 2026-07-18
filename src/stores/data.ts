@@ -4,28 +4,16 @@ import type { Laptime } from '@/model/Laptime'
 import type { LaptimeWithData } from '@/model/LaptimeWithData'
 import type { Location } from '@/model/Location'
 import type { Stage } from '@/model/Stage'
-import type { DocumentData, Unsubscribe } from 'firebase/firestore'
 
 import { cars as carsDb } from '@/assets/db/cars'
 import { locations as locationsDb } from '@/assets/db/locations'
+import { apiDelete, apiGet, apiPatch, apiPost, DRIVERS_ENDPOINT, TIMES_ENDPOINT } from '@/plugins/api'
 import LaptimeUtil from '@/utils/LaptimeUtil'
-import { db } from '@/plugins/firebase'
-import { collection, CollectionReference, deleteDoc, doc, enableIndexedDbPersistence, onSnapshot, setDoc } from 'firebase/firestore'
 import { defineStore } from 'pinia'
 import { v4 as uuidv4 } from 'uuid'
 import { computed, ref, readonly } from 'vue'
 
-enableIndexedDbPersistence(db)
-  .catch((err) => {
-    if (err.code === 'failed-precondition') {
-      console.log('Unable to activate local persistance, failed-precondition')
-    } else if (err.code === 'unimplemented') {
-      console.log('Unable to activate local persistance, unidentified browser')
-    }
-  })
-
 export const useDataStore = defineStore('data', () => {
-  const subs = ref<Subscription[]>([])
   const cars = ref<Car[]>(carsDb)
   const locations = ref<Location[]>(locationsDb.rally)
   const stages = ref<Stage[]>(locationsDb.rally.flatMap(location => [...location.forward, ...location.reverse]))
@@ -41,9 +29,16 @@ export const useDataStore = defineStore('data', () => {
 
   const carGroups = computed(() => ['Any', ...new Set(cars.value.map(x => x.group))])
 
-  const subscribeDb = () => {
-    bindFirestoreCollection<Driver>('drivers', drivers.value, collection(db, 'drivers'))
-    bindFirestoreCollection<Laptime>('times', times.value, collection(db, 'laptimes'))
+  const fetchAll = async () => {
+    await Promise.all([fetchDrivers(), fetchTimes()])
+  }
+
+  const fetchDrivers = async () => {
+    drivers.value = await apiGet<Driver>(DRIVERS_ENDPOINT)
+  }
+
+  const fetchTimes = async () => {
+    times.value = await apiGet<Laptime>(TIMES_ENDPOINT)
   }
 
   const showRightPanel = (show: boolean) => {
@@ -105,91 +100,32 @@ export const useDataStore = defineStore('data', () => {
 
   const addDriver = async (name: string) => {
     const driver = { id: uuidv4(), name }
-    const docRef = doc(db, 'drivers', driver.id)
-    await setDoc(docRef, driver)
+    await apiPost(DRIVERS_ENDPOINT, driver)
+    await fetchDrivers()
   }
 
   const addLaptime = async (laptime: Partial<Laptime>) => {
-    const time = { ...laptime, id: uuidv4(), dateString: new Date(laptime.timestamp!).toLocaleDateString('en-GB') }
-    const docRef = doc(db, 'laptimes', time.id)
-    await setDoc(docRef, time)
+    const time = { ...laptime, id: uuidv4() }
+    await apiPost(TIMES_ENDPOINT, time)
+    await fetchTimes()
   }
 
   const updateLaptime = async (laptime: Laptime) => {
-    if (!laptime || !laptime.id) {
-      return
-    }
-    const docRef = doc(db, 'laptimes', laptime.id)
-    await setDoc(docRef, laptime, { merge: true })
+    if (!laptime?.id) return
+    await apiPatch(`${TIMES_ENDPOINT}?uid=eq.${laptime.id}`, laptime)
+    await fetchTimes()
   }
 
   const deleteLaptime = async (laptimeId: string) => {
-    const docRef = doc(db, 'laptimes', laptimeId)
-    await deleteDoc(docRef)
+    await apiDelete(`${TIMES_ENDPOINT}?uid=eq.${laptimeId}`)
+    await fetchTimes()
   }
 
   const isLocal = () => {
     return ['127.0.0.1:5173', 'dirt2.homelab.net'].includes(window.location.host)
   }
 
-  // firebase
-  const addFirestoreDocument = <T>(collection: T[], data: DocumentData) => {
-    collection.push(data as T)
-  }
-
-  const modifyFirestoreDocument = <T extends { id: string }>(collection: T[], data: DocumentData) => {
-    const index: number = collection.findIndex(x => x.id === data.id);
-    collection.splice(index, 1, data as T)
-  }
-
-  const removeFirestoreDocument = <T extends { id: string }>(collection: T[], data: DocumentData) => {
-    const index: number = collection.findIndex(x => x.id === data.id);
-    collection.splice(index, 1)
-  }
-
-  const addSubscription = ({ key, unsubscribe }: Subscription) => {
-    subs.value.push({ key, unsubscribe })
-  }
-
-  const clearFirestoreCollection = <T>(collection: T[]) => {
-    collection.splice(0)
-  }
-
-  const unsubscribe = (key: string) => {
-    const index = subs.value.findIndex(x => x.key === key)
-    if (index === -1) {
-      return
-    }
-    subs.value[index].unsubscribe()
-    subs.value.splice(index, 1)
-  }
-
-  const unsubscribeAll = () => {
-    subs.value.forEach(x => x.unsubscribe())
-    subs.value.splice(0)
-  }
-
-  const bindFirestoreCollection = <T extends { id: string }>(key: string, collection: T[], collectionRef: CollectionReference) => {
-    unsubscribe(key)
-    clearFirestoreCollection<T>(collection)
-    const unsub = onSnapshot(collectionRef,
-      snapshot => snapshot.docChanges().forEach((change) => {
-        if (change.type === 'added') {
-          addFirestoreDocument<T>(collection, change.doc.data())
-        }
-        if (change.type === 'modified') {
-          modifyFirestoreDocument<T>(collection, change.doc.data())
-        }
-        if (change.type === 'removed') {
-          removeFirestoreDocument<T>(collection, change.doc.data())
-        }
-      })
-    )
-    addSubscription({ key, unsubscribe: unsub })
-  }
-
   return {
-    // state
     cars: readonly(cars),
     locations: readonly(locations),
     stages: readonly(stages),
@@ -202,12 +138,10 @@ export const useDataStore = defineStore('data', () => {
     locationsShow: readonly(locationsShow),
     stagesShow: readonly(stagesShow),
     carGroupFilter: readonly(carGroupFilter),
-
-    // getters
     carGroups,
-
-    // actions
-    subscribeDb,
+    fetchAll,
+    fetchDrivers,
+    fetchTimes,
     showRightPanel,
     showLeftPanel,
     showLocations,
@@ -221,14 +155,6 @@ export const useDataStore = defineStore('data', () => {
     addLaptime,
     updateLaptime,
     deleteLaptime,
-    isLocal,
-
-    // firestore
-    unsubscribeAll
+    isLocal
   }
 })
-
-export interface Subscription {
-  key: string
-  unsubscribe: Unsubscribe
-}

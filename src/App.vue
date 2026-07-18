@@ -5,7 +5,7 @@ import TrackPanel from './components/TrackPanel.vue';
 import { useDataStore } from './stores/data';
 
 import { storeToRefs } from 'pinia';
-import { onBeforeUnmount, onMounted } from 'vue';
+import { onMounted } from 'vue';
 
 // store
 const dataStore = useDataStore()
@@ -16,11 +16,7 @@ const {
 } = storeToRefs(dataStore)
 
 onMounted(() => {
-  dataStore.subscribeDb()
-})
-
-onBeforeUnmount(() => {
-  dataStore.unsubscribeAll()
+  dataStore.fetchAll()
 })
 </script>
 
