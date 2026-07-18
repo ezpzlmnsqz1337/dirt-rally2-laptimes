@@ -1,11 +1,11 @@
 CREATE TABLE drivers (
-    uid UUID PRIMARY KEY,
+    id UUID PRIMARY KEY,
     name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE times (
-    uid UUID PRIMARY KEY,
-    driver_id UUID NOT NULL REFERENCES drivers(uid) ON DELETE CASCADE,
+    id UUID PRIMARY KEY,
+    driver_id UUID NOT NULL REFERENCES drivers(id) ON DELETE CASCADE,
     car_id INTEGER NOT NULL,
     location_id INTEGER NOT NULL,
     stage_id INTEGER NOT NULL,
