@@ -128,14 +128,12 @@ No Vue Router. All navigation via store state:
 3. **Rallycross data present but not surfaced** in UI (no rallycross tab/panel)
 4. **No router**: State-driven navigation works but lacks URL shareability
 5. **WebSocket requires manual stage selection**: Dirt2 telemetry doesn't emit track ID, so user must select stage before racing
-6. **Google Maps API key required**: Set `VITE_GOOGLE_MAPS_API_KEY` in `.env` (copy from `.env.example`). Without it the map shows an error overlay
-7. **`google.maps.Marker` deprecated** (Feb 2024): Upgrade `vue3-google-map` to ≥0.18 when AdvancedMarker support stabilizes
 
 ## Setup
 
 ```bash
 cp .env.example .env
-# Edit .env and add your Google Maps API key
+# Edit .env and add your Google Maps API key and Map ID (see .env.example)
 npm install
 npm run dev
 ```

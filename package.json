@@ -15,6 +15,7 @@
     "deploy:homelab": "bash -c ./deploy.sh"
   },
   "dependencies": {
+    "@googlemaps/js-api-loader": "^2.1.1",
     "firebase": "^9.17.1",
     "flagpack": "^1.0.5",
     "pinia": "^2.0.28",
@@ -22,7 +23,7 @@
     "vue": "^3.2.45",
     "vue-select": "4.0.0-beta.6",
     "vue-spinner": "^1.0.4",
-    "vue3-google-map": "^0.15.0"
+    "vue3-google-map": "^0.27.2"
   },
   "devDependencies": {
     "@pinia/testing": "^0.0.14",

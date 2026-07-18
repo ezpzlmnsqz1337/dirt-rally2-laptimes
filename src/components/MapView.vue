@@ -2,15 +2,16 @@
 import type { Coordinates } from '@/model/Coordinates';
 import type { Location } from '@/model/Location';
 import type { Stage } from '@/model/Stage';
-import { GoogleMap, Marker, Polyline } from 'vue3-google-map';
+import { GoogleMap, AdvancedMarker, Polyline } from 'vue3-google-map';
 
 import { marker64x64 } from '@/assets/map/icons/base64/rally-marker-64x64';
 import { markerSelected64x64 } from '@/assets/map/icons/base64/rally-marker-selected-64x64';
+import { apiPromise } from '@/plugins/googleMaps';
 import { useDataStore } from '@/stores/data';
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
 
-const gmapApiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+const gmapMapId: string = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID
 
 // store
 const store = useDataStore()
@@ -124,14 +125,14 @@ const fluentZoom = (zoom: number, speed = 300) => {
 
 <template>
   <div class="__main">
-    <GoogleMap :api-key="gmapApiKey" ref="mapRef" :center="center" :zoom="ZOOM_LEVEL_FAR"
+    <GoogleMap :api-promise="apiPromise" :map-id="gmapMapId" ref="mapRef" :center="center" :zoom="ZOOM_LEVEL_FAR"
       :disableDefaultUi="true" :minZoom="ZOOM_LEVEL_FAR" map-type-id="satellite" class="__map">
-      <Marker v-for="(l, index) in locations" :key="index" :options="{
-        position: l.coordinates,
-        icon: activeLocation === l ? pins.selected : pins.notSelected,
-        animation: 2,
-        clickable: true
-      }" @click="markerClick(l as Location)" />
+      <AdvancedMarker v-for="(l, index) in locations" :key="index" :options="{ position: l.coordinates }"
+        @click="markerClick(l as Location)">
+        <template #content>
+          <img :src="activeLocation === l ? pins.selected : pins.notSelected" class="__marker-img" alt="" />
+        </template>
+      </AdvancedMarker>
       <Polyline v-for="(s, index) in stages" :key="`stage-${index}`" ref="stagesRef" :options="{
         strokeColor: getStagePolylineColor(s),
         clickable: true,
@@ -146,5 +147,10 @@ const fluentZoom = (zoom: number, speed = 300) => {
 .__map {
   width: 100vw;
   height: 100vh;
+}
+
+.__marker-img {
+  width: 64px;
+  height: 64px;
 }
 </style>
