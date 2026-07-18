@@ -1,8 +1,8 @@
 import { objectToCamel, objectToSnake } from 'ts-case-convert'
 
 const DB_URL = window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:3001'
-  : 'http://192.168.0.102:3001'
+  ? 'http://localhost:3003'
+  : 'http://192.168.0.102:3003'
 
 const DRIVERS_ENDPOINT = `${DB_URL}/drivers`
 const TIMES_ENDPOINT = `${DB_URL}/times`

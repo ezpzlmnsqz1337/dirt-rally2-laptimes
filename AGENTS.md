@@ -86,7 +86,7 @@ Two Pinia stores:
 
 `src/plugins/api.ts` provides `apiGet`, `apiPost`, `apiPatch`, `apiDelete` wrappers around `fetch()` to PostgREST. Uses `ts-case-convert` for snake_case ↔ camelCase conversion.
 
-PostgREST URL: `http://localhost:3001` (dev) / `http://192.168.0.102:3001` (homelab).
+PostgREST URL: `http://localhost:3003` (dev) / `http://192.168.0.102:3003` (homelab).
 
 ## Database
 
