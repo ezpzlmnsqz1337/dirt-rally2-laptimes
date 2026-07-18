@@ -288,20 +288,5 @@ export const locations: Locations = {
         { id: 156, name: 'Glencastle Farm', lengthKm: '5.24' }
       ]
     }
-  ],
-  rallycross: [
-    { id: 1, name: 'Yas Marina Circuit, Abu Dhabi, UAE (DLC)' },
-    { id: 2, name: 'Mettet, Belgium' },
-    { id: 3, name: 'Trois-Rivières, Canada' },
-    { id: 4, name: 'Silverstone, England' },
-    { id: 5, name: 'Lydden Hill, England (DLC)' },
-    { id: 6, name: 'Lohéac, Bretagne, France' },
-    { id: 7, name: 'Estering, Germany (DLC)' },
-    { id: 8, name: 'Biķernieki, Latvia (DLC)' },
-    { id: 9, name: 'Hell, Norway' },
-    { id: 10, name: 'Montalegre, Portugal' },
-    { id: 11, name: 'Killarney International Raceway, South Africa (DLC)' },
-    { id: 12, name: 'Circuit de Barcelona-Catalunya, Spain' },
-    { id: 13, name: 'Höljes, Sweden' }
   ]
 }
