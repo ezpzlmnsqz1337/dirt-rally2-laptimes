@@ -2,6 +2,7 @@
 import ContentPanel from './components/ContentPanel.vue';
 import MapView from './components/MapView.vue';
 import TrackPanel from './components/TrackPanel.vue';
+import StatisticsModal from './components/StatisticsModal.vue';
 import { useDataStore } from './stores/data';
 
 import { storeToRefs } from 'pinia';
@@ -13,7 +14,10 @@ const dataStore = useDataStore()
 const {
   leftPanelShow,
   rightPanelShow,
+  statisticsModalShow,
 } = storeToRefs(dataStore)
+
+const { hideStatisticsModal } = dataStore
 
 onMounted(() => {
   dataStore.fetchAll()
@@ -31,6 +35,7 @@ onMounted(() => {
     <div class="__right" :class="{ __hidden: !rightPanelShow }">
       <ContentPanel />
     </div>
+    <StatisticsModal v-if="statisticsModalShow" @close="hideStatisticsModal()" />
   </div>
 </template>
 

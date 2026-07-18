@@ -125,6 +125,56 @@ export const useDataStore = defineStore('data', () => {
     return ['127.0.0.1:5173', 'dirt2.homelab.net'].includes(window.location.host)
   }
 
+  // ponytail: O(n * s) where n=times, s=stages. Fine for 155 laps.
+  const statistics = computed(() => {
+    const yearFilter = yearFilterRef.value
+    const filteredTimes = yearFilter
+      ? times.value.filter(t => new Date(t.timestamp).getFullYear() === yearFilter)
+      : times.value
+
+    const stageTimeMap = new Map<number, string[]>()
+    for (const t of filteredTimes) {
+      const list = stageTimeMap.get(t.stageId) || []
+      list.push(t.driverId)
+      stageTimeMap.set(t.stageId, list)
+    }
+
+    const driverStats = new Map<string, { total: number; gold: number; silver: number; bronze: number }>()
+    for (const [, driverIds] of stageTimeMap) {
+      for (let i = 0; i < driverIds.length && i < 3; i++) {
+        const stats = driverStats.get(driverIds[i]) || { total: 0, gold: 0, silver: 0, bronze: 0 }
+        if (i === 0) stats.gold++
+        else if (i === 1) stats.silver++
+        else stats.bronze++
+        driverStats.set(driverIds[i], stats)
+      }
+      for (const did of driverIds) {
+        const stats = driverStats.get(did) || { total: 0, gold: 0, silver: 0, bronze: 0 }
+        stats.total++
+        driverStats.set(did, stats)
+      }
+    }
+
+    return [...driverStats.entries()].map(([id, s]) => ({
+      driverId: id,
+      driverName: drivers.value.find(d => d.id === id)?.name || 'Unknown',
+      ...s
+    })).sort((a, b) => b.gold - a.gold || b.silver - a.silver || b.bronze - a.bronze)
+  })
+
+  const availableYears = computed(() => {
+    const years = new Set(times.value.map(t => new Date(t.timestamp).getFullYear()))
+    return [...years].sort((a, b) => b - a)
+  })
+
+  const yearFilterRef = ref<number | null>(null)
+  const yearFilter = computed(() => yearFilterRef.value)
+  const setYearFilter = (year: number | null) => { yearFilterRef.value = year }
+
+  const statisticsModalShow = ref(false)
+  const showStatisticsModal = () => { statisticsModalShow.value = true }
+  const hideStatisticsModal = () => { statisticsModalShow.value = false }
+
   return {
     cars: readonly(cars),
     locations: readonly(locations),
@@ -155,6 +205,13 @@ export const useDataStore = defineStore('data', () => {
     addLaptime,
     updateLaptime,
     deleteLaptime,
-    isLocal
+    isLocal,
+    statistics,
+    availableYears,
+    yearFilter,
+    setYearFilter,
+    statisticsModalShow,
+    showStatisticsModal,
+    hideStatisticsModal
   }
 })

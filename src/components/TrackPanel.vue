@@ -17,7 +17,8 @@ const {
 } = storeToRefs(store)
 
 const {
-  setActiveLocation
+  setActiveLocation,
+  showStatisticsModal
 } = store
 
 const back = () => {
@@ -30,6 +31,9 @@ const back = () => {
     <h2 class="__heading">
       {{ activeLocation ? 'Stages' : 'Locations' }}
     </h2>
+    <div class="__btn __stats" @click="showStatisticsModal()">
+      Statistics
+    </div>
     <div v-if="!activeLocation" class="__locations">
       <LocationList :locations="(locations as Location[])" />
     </div>
@@ -83,29 +87,42 @@ const back = () => {
   margin-bottom: 1rem;
 }
 
-.__top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  .__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
 
-  .__back {
+    .__back {
+      padding: 0.8rem 1rem;
+      font-size: 1rem;
+      white-space: nowrap;
+      border-radius: 0.3rem;
+      background-color: #777777;
+
+      &:hover {
+        cursor: pointer;
+        background-color: #0045e0;
+      }
+
+      &.__active {
+        background-color: #0045E0;
+      }
+    }
+  }
+
+  .__stats {
+    text-align: center;
+    margin: 1rem 0;
     padding: 0.8rem 1rem;
-    font-size: 1rem;
-    white-space: nowrap;
     border-radius: 0.3rem;
-    background-color: #777777;
+    background-color: #015bb6;
 
     &:hover {
       cursor: pointer;
       background-color: #0045e0;
     }
-
-    &.__active {
-      background-color: #0045E0;
-    }
   }
-}
 
 @media screen and (max-width: 768px) {
   .__trackPanel {
