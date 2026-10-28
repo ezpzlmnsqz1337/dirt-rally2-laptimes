@@ -1,73 +1,37 @@
 #!/bin/bash
+#
+# dirt-rally2-laptimes runs as Quadlet units, not as hand-created Podman containers.
+#
+# The pod and container definitions live in the homelab-ai repo:
+#   homelab-ai/config/quadlet/dirt-rally2-laptimes.pod
+#   homelab-ai/config/quadlet/dirt-rally2-laptimes-{postgres,api,app,adminer}.container
+#
+# Creating the pod with `podman pod create` / `podman generate systemd` here would
+# fight with Quadlet on the next boot, so this script only (re)starts the units
+# that Quadlet generates.
+#
+# `deploy.sh` does NOT call this — it only restarts dirt-rally2-laptimes-app.service
+# after loading a new image, so Postgres and the API stay up during a UI deploy.
+#
+# Use this after changing the Quadlet definitions, or to recreate everything.
+#
+set -euo pipefail
 
-HOSTING_PC_IP="${HOSTING_PC_IP:-192.168.0.102}"
+UNITS=(
+  dirt-rally2-laptimes-pod.service
+  dirt-rally2-laptimes-postgres.service
+  dirt-rally2-laptimes-api.service
+  dirt-rally2-laptimes-app.service
+  dirt-rally2-laptimes-adminer.service
+)
 
-APP_HOST_PORT="${APP_HOST_PORT:-8091}"
-APP_CONTAINER_PORT="${APP_CONTAINER_PORT:-8080}"
-ADMINER_HOST_PORT="${ADMINER_HOST_PORT:-8082}"
-ADMINER_CONTAINER_PORT="${ADMINER_CONTAINER_PORT:-80}"
-POSTGREST_PORT="${POSTGREST_PORT:-3003}"
-POSTGREST_CONTAINER_PORT="${POSTGREST_CONTAINER_PORT:-3000}"
+echo ">> restarting Quadlet units for dirt-rally2-laptimes"
+for u in "${UNITS[@]}"; do
+  printf '   %-40s ' "$u"
+  systemctl --user restart "$u"
+  systemctl --user is-active "$u"
+done
 
-export HOSTING_PC_IP POSTGREST_PORT
-
-systemctl --user stop pod-dirt-rally2-laptimes.service
-
-podman pod create --name dirt-rally2-laptimes \
-  -p "${APP_HOST_PORT}:${APP_CONTAINER_PORT}" \
-  -p "${ADMINER_HOST_PORT}:${ADMINER_CONTAINER_PORT}" \
-  -p "${POSTGREST_PORT}:${POSTGREST_CONTAINER_PORT}"
-
-podman volume exists dirt-rally2-laptimes-pgdata || podman volume create dirt-rally2-laptimes-pgdata
-
-if ! podman secret ls --format "{{.Name}}" | grep -q "^pg_pass$"; then
-  echo "Secret 'pg_pass' not found. Please enter the PostgreSQL password:"
-  read -r -s -p "Password: " PG_PASSWORD
-  echo ""
-  echo -n "${PG_PASSWORD}" | podman secret create pg_pass -
-  echo "Secret 'pg_pass' created successfully."
-else
-  echo "Secret 'pg_pass' already exists, skipping creation."
-fi
-
-podman run -d \
-  --name dirt-rally2-laptimes-postgres \
-  --pod dirt-rally2-laptimes \
-  --memory=512m \
-  --memory-swap=512m \
-  -v dirt-rally2-laptimes-pgdata:/var/lib/postgresql/data \
-  --secret pg_pass,type=mount,target=/run/secrets/pg_pass \
-  -e POSTGRES_PASSWORD_FILE=/run/secrets/pg_pass \
-  -e POSTGRES_SHARED_BUFFERS=128MB \
-  -e POSTGRES_EFFECTIVE_CACHE_SIZE=256MB \
-  docker.io/library/postgres:17
-
-podman run -d \
-  --name dirt-rally2-laptimes-adminer \
-  --pod dirt-rally2-laptimes \
-  --memory=128m \
-  docker.io/library/adminer:5
-
-podman run -d \
-  --name dirt-rally2-laptimes-app \
-  --pod dirt-rally2-laptimes \
-  --memory=256m \
-  localhost/dirt-rally2-laptimes:latest
-
-DB_PASSWORD=$(podman run --rm --secret pg_pass,type=mount,target=/run/secrets/pg_pass alpine cat /run/secrets/pg_pass)
-
-podman run -d \
-  --name dirt-rally2-laptimes-api \
-  --pod dirt-rally2-laptimes \
-  --memory=128m \
-  -e PGRST_DB_URI="postgres://postgres:${DB_PASSWORD}@localhost:5432/postgres" \
-  -e PGRST_DB_SCHEMA=public \
-  -e PGRST_DB_ANON_ROLE=postgres \
-  -e PGRST_DB_CHANNEL_ENABLED=false \
-  -e PGRST_OPENAPI_SERVER_PROXY_URI="http://${HOSTING_PC_IP}:${POSTGREST_PORT}" \
-  docker.io/postgrest/postgrest:latest
-
-podman generate systemd --new --name dirt-rally2-laptimes --files --restart-policy=always
-mv *.service ~/.config/systemd/user
-systemctl --user daemon-reload
-systemctl --user enable --now pod-dirt-rally2-laptimes.service
+echo ""
+echo ">> running containers:"
+podman ps --pod --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"

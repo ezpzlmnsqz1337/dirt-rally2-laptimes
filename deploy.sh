@@ -43,18 +43,19 @@ scp -r dirt-rally2-laptimes.tar $DESTINATION:/opt/containers/dirt-rally2-laptime
 echo "✅ Image copied!"
 echo ""
 
-echo "🛑 Stopping existing service..."
-ssh $DESTINATION 'systemctl --user stop pod-dirt-rally2-laptimes.service 2>/dev/null || echo "Service not running or does not exist yet (first deployment)"'
-echo ""
-
+# Load image. Running containers keep the old image until they are restarted,
+# so the site stays up during the transfer.
 echo "📥 Loading image on homelab..."
 ssh $DESTINATION 'podman load -i /opt/containers/dirt-rally2-laptimes.tar'
 echo "✅ Image loaded!"
 echo ""
 
-echo "🚢 Deploying containers..."
-scp -r deployment/create-pod.sh $DESTINATION:/home/hosting/workspace/create-dirt2-pod.sh
-ssh $DESTINATION 'bash /home/hosting/workspace/create-dirt2-pod.sh'
+# Deploy. The pod and its containers are Quadlet units — see
+# homelab-ai/config/quadlet/dirt-rally2-laptimes.pod. Restarting only the app
+# unit recreates the UI container from the new image; Postgres/API stay up.
+echo "🚢 Restarting dirt-rally2-laptimes-app.service..."
+ssh $DESTINATION 'systemctl --user restart dirt-rally2-laptimes-app.service && systemctl --user is-active dirt-rally2-laptimes-app.service'
+echo "✅ Deployed!"
 echo ""
 
 echo "🧹 Cleaning up old images..."
