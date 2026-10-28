@@ -50,9 +50,13 @@ ssh $DESTINATION 'podman load -i /opt/containers/dirt-rally2-laptimes.tar'
 echo "✅ Image loaded!"
 echo ""
 
-# Deploy. The pod and its containers are Quadlet units — see
-# homelab-ai/config/quadlet/dirt-rally2-laptimes.pod. Restarting only the app
-# unit recreates the UI container from the new image; Postgres/API stay up.
+# Deploy. The pod and its containers are Quadlet units shipped from
+# deployment/quadlet/. Install them first (so a definition change is picked up),
+# then restart only the app unit — Postgres and the API stay running.
+echo "📦 Installing Quadlet units..."
+DESTINATION="$DESTINATION" bash deployment/install-quadlet.sh
+echo ""
+
 echo "🚢 Restarting dirt-rally2-laptimes-app.service..."
 ssh $DESTINATION 'systemctl --user restart dirt-rally2-laptimes-app.service && systemctl --user is-active dirt-rally2-laptimes-app.service'
 echo "✅ Deployed!"

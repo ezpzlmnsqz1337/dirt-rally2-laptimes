@@ -1,0 +1,11 @@
+[Unit]
+Description=dirt-rally2-laptimes pod (UI, PostgREST API, Postgres, Adminer)
+
+[Pod]
+PodName=dirt-rally2-laptimes
+PublishPort=8082:80
+PublishPort=8092:80
+PublishPort=3003:3000
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=dirt-rally2-laptimes UI (nginx)
+
+[Container]
+ContainerName=dirt-rally2-laptimes-app
+Image=localhost/dirt-rally2-laptimes:latest
+PodmanArgs=--memory=256m
+Pod=dirt-rally2-laptimes.pod
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
