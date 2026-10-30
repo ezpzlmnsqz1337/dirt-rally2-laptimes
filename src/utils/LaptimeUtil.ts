@@ -8,7 +8,12 @@ export default class LaptimeUtil {
   static pattern = /^(\d{1,2}):(\d{2})\.(\d{3})$/
 
   static compareLaptimes (laptime1: string, laptime2: string) {
-    return this.laptimeToDate(laptime1)!.getTime() - this.laptimeToDate(laptime2)!.getTime()
+    return this.laptimeToMillis(laptime1) - this.laptimeToMillis(laptime2)
+  }
+
+  private static laptimeToMillis (laptime: string) {
+    // Sort malformed rows last instead of crashing the whole table.
+    return this.laptimeToDate(laptime)?.getTime() ?? Number.MAX_SAFE_INTEGER
   }
 
   static dateToLaptime (date: Date) {
@@ -25,8 +30,9 @@ export default class LaptimeUtil {
   static getLaptimeDiff (laptime1: string, laptime2: string) {
     const time1 = this.laptimeToDate(laptime1)
     const time2 = this.laptimeToDate(laptime2)
+    if (!time1 || !time2) { return '' }
 
-    const diff = new Date(time2!.getTime() - time1!.getTime())
+    const diff = new Date(time2.getTime() - time1.getTime())
 
     return `+ ${this.dateToLaptime(diff)}`
   }

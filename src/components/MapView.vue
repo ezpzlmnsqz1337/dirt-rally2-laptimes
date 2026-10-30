@@ -38,8 +38,8 @@ const pins = {
   selected: `data:image/png;base64,${markerSelected64x64}`,
   notSelected: `data:image/png;base64,${marker64x64}`
 };
-let zooming: any | null = null;
-let panning: any | null = null;
+let zooming: ReturnType<typeof setTimeout> | null = null;
+let panning: ReturnType<typeof setTimeout> | null = null;
 
 const ZOOM_LEVEL_FAR = 3
 const ZOOM_LEVEL_SELECTED = 14
@@ -126,7 +126,7 @@ const fluentZoom = (zoom: number, speed = 300) => {
 <template>
   <div class="__main">
     <GoogleMap :api-promise="apiPromise" :map-id="gmapMapId" ref="mapRef" :center="center" :zoom="ZOOM_LEVEL_FAR"
-      :disableDefaultUi="true" :minZoom="ZOOM_LEVEL_FAR" map-type-id="satellite" class="__map">
+      :disable-default-ui="true" :minZoom="ZOOM_LEVEL_FAR" map-type-id="satellite" class="__map">
       <AdvancedMarker v-for="(l, index) in locations" :key="index" :options="{ position: l.coordinates }"
         @click="markerClick(l as Location)">
         <template #content>

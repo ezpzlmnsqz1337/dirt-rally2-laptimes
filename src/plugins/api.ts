@@ -1,8 +1,8 @@
 import { objectToCamel, objectToSnake } from 'ts-case-convert'
+import { isLoopbackHost } from '@/plugins/host'
 
-const DB_URL = window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:3003'
-  : 'http://192.168.0.102:3003'
+const DB_URL = import.meta.env.VITE_API_URL ||
+  (isLoopbackHost() ? 'http://localhost:3003' : 'http://192.168.0.102:3003')
 
 const DRIVERS_ENDPOINT = `${DB_URL}/drivers`
 const TIMES_ENDPOINT = `${DB_URL}/times`
@@ -14,24 +14,32 @@ async function apiGet<T>(url: string): Promise<T[]> {
   return objectToCamel(data) as T[]
 }
 
-async function apiPost<T>(url: string, body: object): Promise<T> {
+async function readOptionalJson<T>(res: Response): Promise<T | undefined> {
+  // PostgREST returns an empty body for POST/PATCH without `Prefer: return=representation`.
+  if (res.status === 204) return
+  const body = await res.text()
+  if (!body) return
+  return JSON.parse(body) as T
+}
+
+async function apiPost<T>(url: string, body: object): Promise<T | undefined> {
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(objectToSnake(body))
   })
   if (!res.ok) throw new Error(`POST ${url}: ${res.status}`)
-  return res.json()
+  return readOptionalJson<T>(res)
 }
 
-async function apiPatch<T>(url: string, body: object): Promise<T> {
+async function apiPatch<T>(url: string, body: object): Promise<T | undefined> {
   const res = await fetch(url, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(objectToSnake(body))
   })
   if (!res.ok) throw new Error(`PATCH ${url}: ${res.status}`)
-  return res.json()
+  return readOptionalJson<T>(res)
 }
 
 async function apiDelete(url: string): Promise<void> {

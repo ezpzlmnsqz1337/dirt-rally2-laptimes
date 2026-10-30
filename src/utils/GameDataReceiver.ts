@@ -14,7 +14,7 @@ export default class GameDataReceiver {
     protected hostname = window.location.hostname
     protected port = 20779
     protected listeners: GameDataListener[] = []
-    protected retryHandler?: NodeJS.Timeout
+    protected retryHandler?: ReturnType<typeof setInterval>
     protected retries = 0
 
     static getInstance () {
@@ -50,16 +50,20 @@ export default class GameDataReceiver {
 
     disconnect () {
       clearInterval(this.retryHandler)
+      this.retryHandler = undefined
+      this.retries = 0
       this.ws?.close()
+      this.ws = null
     }
 
     setupRetryHandler () {
       this.retryHandler = setInterval(() => {
         if (this.retries >= MAX_RETRY_ATTEMPTS) {
           clearInterval(this.retryHandler)
+          this.retryHandler = undefined
           return
         }
-        if (this.ws!.readyState !== WebSocket.OPEN) {
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
           this.retry()
           console.log(`Retry WS connection attempt ${this.retries}/${MAX_RETRY_ATTEMPTS}`)
         } else {
@@ -74,7 +78,8 @@ export default class GameDataReceiver {
     }
 
     removeListener (listener: GameDataListener) {
-      this.listeners.splice(this.listeners.indexOf(listener), 1)
+      const index = this.listeners.indexOf(listener)
+      if (index !== -1) this.listeners.splice(index, 1)
     }
 
     retry () {

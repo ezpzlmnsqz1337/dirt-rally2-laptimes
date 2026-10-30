@@ -28,7 +28,7 @@ describe('TrackPanel', () => {
   it('should call set activeStage with null when back button is clicked', () => {
     const { wrapper, dataStore } = factory({initialState: { activeLocation: locations.rally[0] }});
 
-    (wrapper.vm as any).back()
+    (wrapper.vm as unknown as { back: () => void }).back()
 
     expect(dataStore.setActiveLocation).toHaveBeenCalledWith(null);
     expect(dataStore.activeLocation).toBeNull()

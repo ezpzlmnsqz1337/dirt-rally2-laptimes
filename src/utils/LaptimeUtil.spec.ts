@@ -30,6 +30,13 @@ describe('LaptimeUtil', () => {
     expect(LaptimeUtil.getLaptimeDiff(laptime1, laptime2)).toBe('+ 0:36.667')
   })
 
+  it('should not crash on malformed laptimes', () => {
+    expect(LaptimeUtil.compareLaptimes('not-a-time', '1:00.000')).toBeGreaterThan(0)
+    expect(LaptimeUtil.compareLaptimes('1:00.000', 'not-a-time')).toBeLessThan(0)
+    expect(LaptimeUtil.compareLaptimes('not-a-time', 'also-bad')).toBe(0)
+    expect(LaptimeUtil.getLaptimeDiff('not-a-time', '1:00.000')).toBe('')
+  })
+
   it('should correctly validate laptime', () => {
     const validLaptime = ['1', '23', '456']
     const invalidLaptimes = [

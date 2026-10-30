@@ -35,16 +35,23 @@ const emit = defineEmits<{
 const driverId = ref<string | undefined>(props.laptime?.driver?.id)
 const time = ref<string | undefined>(props.laptime?.time)
 const carId = ref<number | undefined>(props.laptime?.car?.id)
-const laptime = ref<number | undefined>(props.laptime?.time ? LaptimeUtil.laptimeToDate(props.laptime.time)?.getTime()! / 1000 : 0)
+const toSeconds = (value?: string) => {
+  const date = value ? LaptimeUtil.laptimeToDate(value) : undefined
+  return date ? date.getTime() / 1000 : 0
+}
+const laptime = ref<number>(toSeconds(props.laptime?.time))
 
 const save = () => {
+  const current = props.laptime
+  if (!current || !current.location || !current.stage) { return }
+  if (driverId.value === undefined || carId.value === undefined || !time.value) { return }
   updateLaptime({
-    id: props.laptime!.id,
-    carId: carId.value!,
-    driverId: `${driverId.value}`,
-    time: time.value!,
-    locationId: props.laptime!.location!.id,
-    stageId: props.laptime!.stage!.id,
+    id: current.id,
+    carId: carId.value,
+    driverId: driverId.value,
+    time: time.value,
+    locationId: current.location.id,
+    stageId: current.stage.id,
     timestamp: new Date().getTime(),
     notes: ''
   })
@@ -52,7 +59,8 @@ const save = () => {
 }
 
 const remove = () => {
-  deleteLaptime(props.laptime!.id)
+  if (!props.laptime) { return }
+  deleteLaptime(props.laptime.id)
   emit('close')
 }
 
@@ -84,7 +92,7 @@ const remove = () => {
             <LaptimeInput :value="laptime" @changed="time = $event!" />
           </div>
           <div class="__formRow">
-            <button class="__btn __success" :disabled="time === null" @click="save()">
+            <button class="__btn __success" :disabled="!time" @click="save()">
               Save
             </button>
           </div>

@@ -8,6 +8,7 @@ import type { Stage } from '@/model/Stage'
 import { cars as carsDb } from '@/assets/db/cars'
 import { locations as locationsDb } from '@/assets/db/locations'
 import { apiDelete, apiGet, apiPatch, apiPost, DRIVERS_ENDPOINT, TIMES_ENDPOINT } from '@/plugins/api'
+import { isLocalHost } from '@/plugins/host'
 import LaptimeUtil from '@/utils/LaptimeUtil'
 import { defineStore } from 'pinia'
 import { v4 as uuidv4 } from 'uuid'
@@ -112,47 +113,45 @@ export const useDataStore = defineStore('data', () => {
 
   const updateLaptime = async (laptime: Laptime) => {
     if (!laptime?.id) return
-    await apiPatch(`${TIMES_ENDPOINT}?uid=eq.${laptime.id}`, laptime)
+    await apiPatch(`${TIMES_ENDPOINT}?id=eq.${laptime.id}`, laptime)
     await fetchTimes()
   }
 
   const deleteLaptime = async (laptimeId: string) => {
-    await apiDelete(`${TIMES_ENDPOINT}?uid=eq.${laptimeId}`)
+    await apiDelete(`${TIMES_ENDPOINT}?id=eq.${laptimeId}`)
     await fetchTimes()
   }
 
   const isLocal = () => {
-    return ['127.0.0.1:5173', 'dirt2.homelab.net'].includes(window.location.host)
+    return isLocalHost()
   }
 
-  // ponytail: O(n * s) where n=times, s=stages. Fine for 155 laps.
+  // O(n log n) sort per stage; negligible for the current dataset size.
   const statistics = computed(() => {
     const yearFilter = yearFilterRef.value
     const filteredTimes = yearFilter
       ? times.value.filter(t => new Date(t.timestamp).getFullYear() === yearFilter)
       : times.value
 
-    const stageTimeMap = new Map<number, string[]>()
+    const stageTimeMap = new Map<number, Laptime[]>()
     for (const t of filteredTimes) {
       const list = stageTimeMap.get(t.stageId) || []
-      list.push(t.driverId)
+      list.push(t)
       stageTimeMap.set(t.stageId, list)
     }
 
     const driverStats = new Map<string, { total: number; gold: number; silver: number; bronze: number }>()
-    for (const [, driverIds] of stageTimeMap) {
-      for (let i = 0; i < driverIds.length && i < 3; i++) {
-        const stats = driverStats.get(driverIds[i]) || { total: 0, gold: 0, silver: 0, bronze: 0 }
-        if (i === 0) stats.gold++
-        else if (i === 1) stats.silver++
-        else stats.bronze++
-        driverStats.set(driverIds[i], stats)
-      }
-      for (const did of driverIds) {
-        const stats = driverStats.get(did) || { total: 0, gold: 0, silver: 0, bronze: 0 }
+    for (const [, stageTimes] of stageTimeMap) {
+      // PostgREST returns rows unordered, so rank by actual laptime rather than response order.
+      const rankedTimes = [...stageTimes].sort((a, b) => LaptimeUtil.compareLaptimes(a.time, b.time))
+      rankedTimes.forEach(({ driverId }, index) => {
+        const stats = driverStats.get(driverId) || { total: 0, gold: 0, silver: 0, bronze: 0 }
         stats.total++
-        driverStats.set(did, stats)
-      }
+        if (index === 0) stats.gold++
+        else if (index === 1) stats.silver++
+        else if (index === 2) stats.bronze++
+        driverStats.set(driverId, stats)
+      })
     }
 
     return [...driverStats.entries()].map(([id, s]) => ({

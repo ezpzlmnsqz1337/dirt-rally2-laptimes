@@ -10,7 +10,6 @@ import EditLaptimeModal from '@/components/modals/EditLaptimeModal.vue';
 
 import { ref } from 'vue';
 import type { LaptimeWithData } from '@/model/LaptimeWithData';
-import type { Laptime } from '@/model/Laptime';
 
 type ModalType = 'add-driver' | 'add-laptime' | 'edit-laptime';
 
@@ -32,12 +31,12 @@ const {
 const close = () => {
   setActiveStage(null)
 }
-const laptimeToEdit = ref<Laptime | undefined>(undefined)
+const laptimeToEdit = ref<LaptimeWithData | undefined>(undefined)
 const modals = ref<ModalType[]>([])
 
 const onRowClicked = (laptime: LaptimeWithData) => {
   if (!isLocal()) { return }
-  laptimeToEdit.value = laptime as Laptime
+  laptimeToEdit.value = laptime
   showModal('edit-laptime')
 }
 
@@ -71,8 +70,8 @@ const closeModal = () => {
         <div v-if="isLocal()" class="__btn __success" @click="showModal('add-laptime')">Add Laptime</div>
       </div>
     </div>
-    <AddLaptimeModal v-show="isModalActive('add-laptime')" @close="closeModal()"
-      @show-add-driver-modal="showModal('add-driver')" />
+    <AddLaptimeModal v-show="isModalActive('add-laptime')" :active="isModalActive('add-laptime')"
+      @close="closeModal()" @show-add-driver-modal="showModal('add-driver')" />
     <AddDriverModal v-show="isModalActive('add-driver')" @close="closeModal()" />
     <EditLaptimeModal v-if="isModalActive('edit-laptime')" @close="closeModal()"
       @show-add-driver-modal="showModal('add-driver')" :laptime="laptimeToEdit" />

@@ -75,7 +75,7 @@ Two Pinia stores:
 - PostgREST-synced: `drivers`, `times` tables fetched on mount via `fetchAll()`
 - CRUD actions: `addDriver`, `addLaptime`, `updateLaptime`, `deleteLaptime` → POST/PATCH/DELETE to PostgREST
 - Panel state: `activeLocation`, `activeStage`, panel visibility flags
-- `isLocal()`: true when host is `127.0.0.1:5173` or `dirt2.homelab.net`
+- `isLocal()`: true on loopback (`localhost`, `127.0.0.1`), private LAN IPs, and `*.homelab.net` / `*.local` hosts
 
 ### `useGameDataStore` (game-data.ts)
 - WebSocket connection via `GameDataReceiver` singleton
@@ -86,15 +86,15 @@ Two Pinia stores:
 
 `src/plugins/api.ts` provides `apiGet`, `apiPost`, `apiPatch`, `apiDelete` wrappers around `fetch()` to PostgREST. Uses `ts-case-convert` for snake_case ↔ camelCase conversion.
 
-PostgREST URL: `http://localhost:3003` (dev) / `http://192.168.0.102:3003` (homelab).
+PostgREST URL: set `VITE_API_URL` to override. Defaults to `http://localhost:3003` on loopback hosts and `http://192.168.0.102:3003` otherwise (homelab IP hardcoded as a fallback in `src/plugins/api.ts`; update it or set `VITE_API_URL` if the host moves).
 
 ## Database
 
 Two tables (see `src/assets/db/create_tables.sql`):
 
 ```sql
-drivers: uid UUID PK, name VARCHAR(100)
-times:   uid UUID PK, driver_id UUID FK→drivers, car_id INT, location_id INT, stage_id INT,
+drivers: id UUID PK, name VARCHAR(100)
+times:   id UUID PK, driver_id UUID FK→drivers, car_id INT, location_id INT, stage_id INT,
          time VARCHAR(10), timestamp BIGINT, notes TEXT
 ```
 
@@ -150,7 +150,7 @@ No Vue Router. All navigation via store state:
 
 ```bash
 cp .env.example .env
-# Edit .env and add your Google Maps API key and Map ID (see .env.example)
+# Edit .env and add your Google Maps API key, Map ID, and PostgREST URL (see .env.example)
 npm install
 npm run dev
 ```
@@ -162,8 +162,8 @@ npm run dev
 
 ## Testing
 
-- **Unit**: `npm run test:unit` (Vitest) — currently vestigial
-- **E2E**: `npm run test:e2e` (Cypress) — placeholder test only
+- **Unit**: `npm run test:unit` (Vitest) — store statistics/CRUD, `LaptimeUtil`, `TimeTable`, `TrackPanel`, API helpers
+- **E2E**: `npm run test:e2e` (Cypress) — no specs yet
 - **Lint**: `npm run lint`
 - **Type check**: `npm run type-check`
 

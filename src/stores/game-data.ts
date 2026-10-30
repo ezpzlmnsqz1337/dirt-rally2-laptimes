@@ -39,19 +39,31 @@ export const useGameDataStore = defineStore('game-data', () => {
     receiver.connect(hostname, port,
       () => websocketState.value = WebSocket.OPEN,
       () => websocketState.value = WebSocket.CLOSED)
-    receiver.addListener(m => parseData(m))
+    // Reconnects can fire repeatedly; never stack duplicate listeners.
+    receiver.removeListener(parseData)
+    receiver.addListener(parseData)
   }
 
   const disconnect = () => {
     GameDataReceiver.getInstance().disconnect()
   }
 
+  const warnedOrigins = new Set<string>()
+
   const parseData = (data: GameData) => {
-    if (HOSTS[data.origin] === providerHostname.value) {
-      setLaptime(data.laptime)
-      setInMenu(data.inMenu)
-      setFinishedSuccessfully(data.finishedSuccessfully)
+    const matchesSelectedHost = HOSTS[data.origin] === providerHostname.value ||
+      data.origin === providerHostname.value
+    if (!matchesSelectedHost) {
+      if (!warnedOrigins.has(data.origin)) {
+        warnedOrigins.add(data.origin)
+        console.warn(`Ignoring game data from "${data.origin}"; selected provider is "${providerHostname.value}"`)
+      }
+      return
     }
+
+    setLaptime(data.laptime)
+    setInMenu(data.inMenu)
+    setFinishedSuccessfully(data.finishedSuccessfully)
   }
 
   return {

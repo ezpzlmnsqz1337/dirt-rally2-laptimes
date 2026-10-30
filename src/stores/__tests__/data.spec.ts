@@ -12,8 +12,10 @@ vi.mock('@/plugins/api', () => ({
   DB_URL: 'http://localhost:3003',
 }))
 
-const { apiGet } = await import('@/plugins/api')
+const { apiGet, apiPatch, apiDelete } = await import('@/plugins/api')
 const mockApiGet = apiGet as ReturnType<typeof vi.fn>
+const mockApiPatch = apiPatch as ReturnType<typeof vi.fn>
+const mockApiDelete = apiDelete as ReturnType<typeof vi.fn>
 
 function makeTimes(stageDrivers: [number, ...string[]][]): object[] {
   let i = 0
@@ -24,7 +26,7 @@ function makeTimes(stageDrivers: [number, ...string[]][]): object[] {
       driverId,
       locationId: 1,
       stageId,
-      time: `1:0${i}.000`,
+      time: `1:${String(i).padStart(2, '0')}.000`,
       timestamp: Date.UTC(2023, 0, 1) + i * 1000,
       notes: ''
     }))
@@ -40,6 +42,8 @@ const DRIVERS = [
 describe('data store statistics', () => {
   beforeEach(() => {
     mockApiGet.mockReset()
+    mockApiPatch.mockReset()
+    mockApiDelete.mockReset()
     setActivePinia(createPinia())
   })
 
@@ -134,5 +138,65 @@ describe('data store statistics', () => {
     expect(stats[0].gold).toBe(3)
     expect(stats[0].silver).toBe(0)
     expect(stats[0].bronze).toBe(0)
+  })
+
+  it('awards medals by laptime, not by API row order', async () => {
+    const store = useDataStore()
+    mockApiGet.mockResolvedValueOnce(DRIVERS)
+    mockApiGet.mockResolvedValueOnce([
+      { id: '1', carId: 1, driverId: 'c', locationId: 1, stageId: 1, time: '1:05.000', timestamp: Date.UTC(2023, 0, 1), notes: '' },
+      { id: '2', carId: 1, driverId: 'a', locationId: 1, stageId: 1, time: '1:00.000', timestamp: Date.UTC(2023, 0, 1), notes: '' },
+      { id: '3', carId: 1, driverId: 'b', locationId: 1, stageId: 1, time: '1:03.000', timestamp: Date.UTC(2023, 0, 1), notes: '' },
+      { id: '4', carId: 1, driverId: 'b', locationId: 1, stageId: 2, time: '2:10.000', timestamp: Date.UTC(2023, 0, 1), notes: '' },
+      { id: '5', carId: 1, driverId: 'c', locationId: 1, stageId: 2, time: '2:00.000', timestamp: Date.UTC(2023, 0, 1), notes: '' },
+      { id: '6', carId: 1, driverId: 'a', locationId: 1, stageId: 2, time: '2:05.000', timestamp: Date.UTC(2023, 0, 1), notes: '' },
+    ])
+
+    await store.fetchAll()
+    const stats = store.statistics
+
+    const alice = stats.find(s => s.driverId === 'a')!
+    expect(alice.gold).toBe(1)
+    expect(alice.silver).toBe(1)
+
+    const bob = stats.find(s => s.driverId === 'b')!
+    expect(bob.gold).toBe(0)
+    expect(bob.silver).toBe(1)
+    expect(bob.bronze).toBe(1)
+
+    const charlie = stats.find(s => s.driverId === 'c')!
+    expect(charlie.gold).toBe(1)
+    expect(charlie.bronze).toBe(1)
+  })
+})
+
+describe('data store CRUD', () => {
+  beforeEach(() => {
+    mockApiGet.mockReset()
+    mockApiPatch.mockReset()
+    mockApiDelete.mockReset()
+    setActivePinia(createPinia())
+  })
+
+  it('updates and deletes times by the id column', async () => {
+    const store = useDataStore()
+    mockApiGet.mockResolvedValue([])
+
+    const laptime = {
+      id: 'time-1',
+      carId: 1,
+      driverId: 'a',
+      locationId: 1,
+      stageId: 1,
+      time: '1:00.000',
+      timestamp: Date.UTC(2023, 0, 1),
+      notes: ''
+    }
+
+    await store.updateLaptime(laptime)
+    expect(mockApiPatch).toHaveBeenCalledWith('http://localhost:3003/times?id=eq.time-1', laptime)
+
+    await store.deleteLaptime('time-1')
+    expect(mockApiDelete).toHaveBeenCalledWith('http://localhost:3003/times?id=eq.time-1')
   })
 })

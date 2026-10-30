@@ -51,7 +51,7 @@ const rows = computed(() => {
           {{ time.time }}
         </td>
         <td class="__losing">
-          <span v-if="index > 0">{{ LaptimeUtil.getLaptimeDiff(times[0].time, time.time) }}</span>
+          <span v-if="index > 0 && rows[0]">{{ LaptimeUtil.getLaptimeDiff(rows[0].time, time.time) }}</span>
         </td>
         <td class="__car">
           {{ time.car?.name }}
