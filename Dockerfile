@@ -9,3 +9,4 @@ RUN npm ci && npm run build
 
 FROM docker.io/library/nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
+COPY deployment/nginx-default.conf /etc/nginx/conf.d/default.conf
