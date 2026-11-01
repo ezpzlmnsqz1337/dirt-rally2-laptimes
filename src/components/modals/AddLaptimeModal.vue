@@ -151,14 +151,14 @@ const add = async (laptimeToAdd: string | null) => {
           <div class="__formRow">
             <label for="add-driver-select">Driver</label>
             <v-select input-id="add-driver-select" class="__select" :options="drivers" label="name" :reduce="(driver: Driver) => driver.id"
-              v-model="driverId" :clearable="false" @option:selected="saveSettingsToLocalStorage()">
+              v-model="driverId" :clearable="false" append-to-body @option:selected="saveSettingsToLocalStorage()">
             </v-select>
             <button type="button" class="__btn" @click="emit('showAddDriverModal')">Add driver</button>
           </div>
           <div class="__formRow">
             <label for="add-car-select">Car</label>
             <v-select input-id="add-car-select" class="__select" :options="carsByGroup" label="name" :reduce="(car: Car) => car.id" v-model="carId"
-              :clearable="false" @option:selected="saveSettingsToLocalStorage()">
+              :clearable="false" append-to-body @option:selected="saveSettingsToLocalStorage()">
             </v-select>
           </div>
           <div class="__formRow">

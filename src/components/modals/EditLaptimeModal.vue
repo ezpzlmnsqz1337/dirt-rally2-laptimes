@@ -103,14 +103,14 @@ const remove = async () => {
           <div class="__formRow">
             <label for="edit-driver-select">Driver</label>
             <v-select input-id="edit-driver-select" class="__select" :options="drivers" label="name" :reduce="(driver: Driver) => driver.id"
-              v-model="driverId" :clearable="false">
+              v-model="driverId" :clearable="false" append-to-body>
             </v-select>
             <button type="button" class="__btn" @click="emit('showAddDriverModal')">Add driver</button>
           </div>
           <div class="__formRow">
             <label for="edit-car-select">Car</label>
             <v-select input-id="edit-car-select" class="__select" :options="cars" label="name" :reduce="(car: Car) => car.id" v-model="carId"
-              :clearable="false">
+              :clearable="false" append-to-body>
             </v-select>
           </div>
           <div class="__formRow">

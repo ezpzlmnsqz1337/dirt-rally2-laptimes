@@ -1,6 +1,8 @@
-/* vue-select renders its dropdown menu inside the library's own subtree, so
-   rules written in a scoped component never match it and the library's white
-   default theme wins. This sheet is imported globally in main.ts, after
+/* vue-select renders its dropdown menu inside the library's own subtree unless
+   the component sets `append-to-body`, in which case it teleports the menu to
+   <body> (still outside every scoped component). Either way rules written in a
+   scoped component never match it and the library's white default theme wins.
+   This sheet is imported globally in main.ts, after
    vue-select/dist/vue-select.css, and is the single source of truth for the
    dark theme of every v-select in the app.
    Plain, flat CSS on purpose: no nesting, no scope attributes. */
@@ -48,11 +50,18 @@
   border-bottom-right-radius: var(--radius-sm);
 }
 
+/* Every v-select opens with append-to-body, so the menu is a direct child of
+   <body>: no ancestor scroll container can clip it and no ancestor stacking
+   context can bury it. z-index 50 clears the modal backdrop (10) while staying
+   below nothing else in the app; min-width keeps a teleported menu readable
+   when it is narrower than its toggle. */
 .vs__dropdown-menu {
   background-color: var(--surface-raised);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
   color: var(--fg);
+  z-index: 50;
+  min-width: 12rem;
 }
 
 .vs__dropdown-option {

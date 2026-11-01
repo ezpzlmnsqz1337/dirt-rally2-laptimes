@@ -85,6 +85,7 @@ const raceStateClass = computed(() => {
         aria-label="Websocket provider"
         :options="wsHosts"
         :reduce="(host: any) => host.value"
+        append-to-body
       />
       <button
         type="button"

@@ -34,7 +34,7 @@ const carGroupFilterOptions = computed(() => carGroups.value.map((group) => ({
   <div class="__wrapper">
     <label for="car-group-filter" class="__label">Group</label>
     <v-select id="car-group-filter" input-id="car-group-filter" class="__select" :options="carGroupFilterOptions"
-      :model-value="carGroupFilter" :searchable="false" :clearable="false"
+      :model-value="carGroupFilter" :searchable="false" :clearable="false" append-to-body
       @update:model-value="setCarGroupFilter($event.value)" />
   </div>
 </template>
