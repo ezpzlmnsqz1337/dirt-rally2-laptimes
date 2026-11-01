@@ -73,6 +73,7 @@ const back = () => {
   max-width: 26rem;
   height: calc(100vh - 2rem);
   padding: 1rem;
+  padding-top: calc(1rem + env(safe-area-inset-top, 0px));
   margin: 1rem 0 1rem 1rem;
   color: var(--fg);
   display: flex;

@@ -122,6 +122,7 @@ const closeEditModal = () => {
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   padding: 1rem;
+  padding-top: calc(1rem + env(safe-area-inset-top, 0px));
   width: 63vw;
   max-width: 60rem;
   height: calc(100vh - 2rem);
