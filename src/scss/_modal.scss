@@ -1,44 +1,62 @@
 .__backdrop {
   position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  inset: 0;
+  background-color: var(--overlay-backdrop);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
   z-index: 10;
 }
 
 .__modal {
   text-align: center;
-  padding: 1rem;
-  width: 20vw;
-  background-color: rgb(117, 117, 117);
-  border-radius: 0.3rem;
+  padding: 1.5rem;
+  width: min(90vw, 32rem);
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 64px var(--shadow-overlay);
+  color: var(--fg);
+
+  h2 {
+    margin-bottom: 1rem;
+  }
 
   .__formRow {
     display: flex;
     flex-direction: column;
-    margin: 2rem 0;
+    margin: 1.25rem 0;
+    text-align: left;
 
     label {
-      font-size: 1.2rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
       display: block;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
   }
-}
 
-@media screen and (max-width: 1500px) {
-  .__modal {
-    width: 60%
+  .__actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+
+  .__error {
+    margin: 0;
+    color: var(--danger);
+    font-size: 0.85rem;
   }
 }
 
 @media screen and (max-width: 768px) {
   .__modal {
-    width: calc(100% - 2rem)
+    width: calc(100% - 2rem);
   }
 }

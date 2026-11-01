@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import LaptimeUtil from '@/utils/LaptimeUtil'
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, getCurrentInstance, onMounted, watch } from 'vue'
 
 export interface Props {
   value?: number
@@ -24,6 +24,9 @@ const laptimeError = ref(false)
 const minutesRef = ref(null)
 const secondsRef = ref(null)
 const millisecondsRef = ref(null)
+
+// Unique per instance: AddLaptime and EditLaptime can be mounted together.
+const hintId = `laptime-hint-${getCurrentInstance()?.uid ?? 0}`
 
 const valid = computed(() => {
   return laptime.value && !laptimeError.value
@@ -97,14 +100,18 @@ defineExpose({
   <div
     class="__laptimeInputs"
     :class="{__error: !valid}"
+    role="group"
+    aria-label="Lap time"
   >
     <input
       ref="minutesRef"
       v-model="minutes"
-      tabindex="1"
       type="text"
       maxlength="2"
       class="__minutes"
+      aria-label="Lap time minutes"
+      :aria-describedby="hintId"
+      :aria-invalid="!valid"
       placeholder="0"
       :disabled="disabled"
       @keydown="onLaptimeInputKeyDown($event, null, secondsRef)"
@@ -116,10 +123,12 @@ defineExpose({
     <input
       ref="secondsRef"
       v-model="seconds"
-      tabindex="2"
       maxlength="2"
       type="text"
       class="__seconds"
+      aria-label="Lap time seconds"
+      :aria-describedby="hintId"
+      :aria-invalid="!valid"
       placeholder="00"
       :disabled="disabled"
       @keydown="onLaptimeInputKeyDown($event, minutesRef, millisecondsRef)"
@@ -131,23 +140,27 @@ defineExpose({
     <input
       ref="millisecondsRef"
       v-model="milliseconds"
-      tabindex="3"
       maxlength="3"
       type="text"
       class="__milliseconds"
+      aria-label="Lap time milliseconds"
+      :aria-describedby="hintId"
+      :aria-invalid="!valid"
       placeholder="000"
       :disabled="disabled"
       @keydown="onLaptimeInputKeyDown($event, secondsRef, null)"
       @input="onLaptimeInput()"
     >
+    <span :id="hintId" class="__hint">Use minutes:seconds.milliseconds</span>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .__laptimeInputs {
-  border-radius: 0.3rem;
+  border-radius: var(--radius-sm);
   display: flex;
   width: 100%;
+  font-variant-numeric: tabular-nums;
 
   .__minutes {
     width: 100%;
@@ -180,30 +193,42 @@ defineExpose({
   }
 
   .__colon, .__dot {
-    background-color: white;
-    color: black;
-    font-size: 2rem;
-    padding-top: 0.45rem;
-    border-top: 0.1rem solid black;
-    border-bottom: 0.1rem solid black;
+    background-color: var(--surface-raised);
+    color: var(--muted);
+    font-size: 1.5rem;
+    padding-top: 0.35rem;
+    border-top: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .__hint {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   &.__error {
     .__minutes {
-      border: 0.15rem solid red;
-      color: red;
+      border: 1px solid var(--danger);
+      color: var(--danger);
       border-right: none;
     }
     .__seconds,  .__colon,  .__dot {
-      border: 0.15rem solid red;
-      color: red;
+      border: 1px solid var(--danger);
+      color: var(--danger);
       border-right: none;
       border-left: none;
     }
 
     .__milliseconds {
-      border: 0.15rem solid red;
-      color: red;
+      border: 1px solid var(--danger);
+      color: var(--danger);
       border-left: none;
     }
   }

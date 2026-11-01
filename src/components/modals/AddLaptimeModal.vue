@@ -5,6 +5,7 @@ import { WS_OPEN } from '@/model/websocket-constants';
 import { useDataStore } from '@/stores/data';
 import { useGameDataStore } from '@/stores/game-data';
 import LaptimeUtil from '@/utils/LaptimeUtil';
+import { useModalFocus } from '@/utils/useModalFocus';
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import LaptimeInput from '../LaptimeInput.vue';
@@ -45,6 +46,9 @@ const emit = defineEmits<{
   (e: 'showAddDriverModal'): void,
   (e: 'close'): void
 }>()
+
+const dialogRef = ref<HTMLElement | null>(null)
+useModalFocus(dialogRef, () => emit('close'), computed(() => props.active))
 
 const carsByGroup = computed(() => {
   return cars.value.filter(car => carGroupFilter.value === 'Any' || car.group === carGroupFilter.value)
@@ -106,18 +110,27 @@ const saveSettingsToLocalStorage = () => {
   localStorage.setItem('settings', JSON.stringify({ driverId: driverId.value, carId: carId.value }))
 }
 
-const add = (laptimeToAdd: string | null) => {
+const saveError = ref<string | null>(null)
+
+const add = async (laptimeToAdd: string | null) => {
   if (!laptimeToAdd || !activeStage.value || !activeLocation.value) { return }
   if (driverId.value === undefined || carId.value === undefined) { return }
-  addLaptime({
-    carId: carId.value,
-    driverId: driverId.value,
-    time: laptimeToAdd,
-    locationId: activeLocation.value.id,
-    stageId: activeStage.value.id,
-    timestamp: new Date().getTime(),
-    notes: ''
-  })
+  saveError.value = null
+  try {
+    await addLaptime({
+      carId: carId.value,
+      driverId: driverId.value,
+      time: laptimeToAdd,
+      locationId: activeLocation.value.id,
+      stageId: activeStage.value.id,
+      timestamp: new Date().getTime(),
+      notes: ''
+    })
+  } catch (error) {
+    saveError.value = 'Could not save the lap time. Check the connection and try again.'
+    console.error('Failed to add laptime:', error)
+    return
+  }
   saveSettingsToLocalStorage()
   if (pendingTelemetry.value) telemetryConsumed.value = true
   pendingTelemetry.value = false
@@ -128,7 +141,7 @@ const add = (laptimeToAdd: string | null) => {
 
 <template>
   <div class="__backdrop" @click="emit('close')">
-    <div class="__modal" @click.stop="">
+    <div ref="dialogRef" class="__modal" role="dialog" aria-modal="true" aria-label="Add laptime" tabindex="-1" @click.stop="">
       <div>
         <h2>Add Laptime</h2>
       </div>
@@ -136,15 +149,15 @@ const add = (laptimeToAdd: string | null) => {
         <ProviderHostnameSelect />
         <div class="__form">
           <div class="__formRow">
-            <label>Driver</label>
-            <v-select class="__select" :options="drivers" label="name" :reduce="(driver: Driver) => driver.id"
+            <label for="add-driver-select">Driver</label>
+            <v-select input-id="add-driver-select" class="__select" :options="drivers" label="name" :reduce="(driver: Driver) => driver.id"
               v-model="driverId" :clearable="false" @option:selected="saveSettingsToLocalStorage()">
             </v-select>
-            <button class="__btn __success" @click="emit('showAddDriverModal')">Add Driver</button>
+            <button type="button" class="__btn" @click="emit('showAddDriverModal')">Add driver</button>
           </div>
           <div class="__formRow">
-            <label>Car</label>
-            <v-select class="__select" :options="carsByGroup" label="name" :reduce="(car: Car) => car.id" v-model="carId"
+            <label for="add-car-select">Car</label>
+            <v-select input-id="add-car-select" class="__select" :options="carsByGroup" label="name" :reduce="(car: Car) => car.id" v-model="carId"
               :clearable="false" @option:selected="saveSettingsToLocalStorage()">
             </v-select>
           </div>
@@ -152,8 +165,11 @@ const add = (laptimeToAdd: string | null) => {
             <label>Time</label>
             <LaptimeInput :value="laptime" @changed="time = $event" />
           </div>
+          <div class="__formRow" v-if="saveError">
+            <p class="__error" role="alert">{{ saveError }}</p>
+          </div>
           <div class="__formRow" v-if="websocketState !== WS_OPEN || pendingTelemetry">
-            <button class="__btn __success" :disabled="!time" @click="add(time)">
+            <button type="button" class="__btn __primary" :disabled="!time" @click="add(time)">
               Add
             </button>
           </div>

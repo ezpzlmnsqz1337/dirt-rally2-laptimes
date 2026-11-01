@@ -45,7 +45,7 @@ src/
 │   └── modals/        # AddLaptime, AddDriver, EditLaptime modals
 ├── model/             # TypeScript interfaces and enums
 ├── plugins/           # api.ts (PostgREST fetch wrappers), googleMaps.ts (Maps API loader)
-├── scss/              # Shared SCSS partials (_global.scss, _modal.scss)
+├── scss/              # Shared SCSS partials (_tokens.scss, _global.scss, _modal.scss)
 ├── stores/            # Pinia stores (data.ts, game-data.ts)
 └── utils/             # GameDataReceiver (WebSocket), LaptimeUtil
 ```
@@ -131,8 +131,11 @@ No Vue Router. All navigation via store state:
 
 ### CSS/SCSS
 - `src/scss/_global.scss` injected globally via Vite `additionalData`
-- `src/scss/_modal.scss` shared modal styles (`@import` in each modal)
+- `src/scss/_tokens.scss` holds the canonical design tokens (`--canvas`, `--surface`, `--surface-raised`, `--line`, `--line-strong`, `--fg`, `--muted`, `--accent`, `--accent-strong`, `--success`, `--warning`, `--danger`, `--medal-*`, `--radius-*`, `--motion-*`). Components must use these, never raw hex.
+- `src/scss/_modal.scss` shared modal styles (`@use` in each modal)
 - Scoped `<style>` in components
+- Canonical contract: `tokens.json` in `/work/homelab-ai/docs/design/`. Change the value in both `_tokens.scss` and `tokens.json`, then run `node /work/homelab-ai/scripts/check_design_tokens.mjs`.
+- Accessibility baseline: `:focus-visible` ring is global, do not remove outlines; interactive elements are real `<button>`s, not clickable `div`s; visible thin scrollbars; `prefers-reduced-motion` is honoured.
 
 ## Local vs Production
 

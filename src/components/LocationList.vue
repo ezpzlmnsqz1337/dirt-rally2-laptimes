@@ -33,21 +33,21 @@ const isActiveLocation  = (location: Location) => {
 
 <template>
   <div class="__wrapper">
-    <div
+    <button
       v-for="l in locations"
       :key="`location-${l.id}`"
+      type="button"
       class="__item __location"
       :class="{__active: isActiveLocation(l as Location)}"
+      :aria-current="isActiveLocation(l as Location) ? 'true' : undefined"
       @click="setActiveLocation(l as Location)"
     >
-      <div>
+      <span class="__label">
         {{ l.name }}
-        <div>{{ getTimesForLocation(l as Location).length }} time(s)</div>
-      </div>
-      <div>
-        <span :class="`fp fp-lg ${l.countryCode}`" ></span>
-      </div>
-    </div>
+        <span class="__meta">{{ getTimesForLocation(l as Location).length }} time(s)</span>
+      </span>
+      <span :class="`fp fp-lg ${l.countryCode}`" aria-hidden="true"></span>
+    </button>
   </div>
 </template>
 
@@ -60,21 +60,44 @@ const isActiveLocation  = (location: Location) => {
 .__item {
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
-  padding: 0.8rem 1rem;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  border-radius: 0.3rem;
-  background-color: #777777;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: var(--target-min);
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 0.4rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-raised);
+  cursor: pointer;
+  transition: background-color var(--motion-fast) ease, border-color var(--motion-fast) ease;
 
   &:hover {
-    cursor: pointer;
-    background-color: #0045e0;
+    background-color: var(--line);
+    border-color: var(--line-strong);
   }
 
   &.__active {
-    background-color: #0045E0;
+    border-color: var(--accent);
+    background-color: var(--accent-soft);
   }
+}
+
+.__label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.__meta {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .__location {

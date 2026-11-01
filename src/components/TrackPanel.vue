@@ -27,109 +27,117 @@ const back = () => {
 </script>
 
 <template>
-  <div class="__trackPanel">
-    <h2 class="__heading">
-      {{ activeLocation ? 'Stages' : 'Locations' }}
-    </h2>
-    <div class="__btn __stats" @click="showStatisticsModal()">
-      Statistics
+  <aside class="__trackPanel" aria-label="Rally locations and stages">
+    <div class="__panelTop">
+      <h2 class="__heading">
+        {{ activeLocation ? 'Stages' : 'Locations' }}
+      </h2>
+      <button type="button" class="__btn __stats" @click="showStatisticsModal()">
+        Statistics
+      </button>
     </div>
     <div v-if="!activeLocation" class="__locations">
       <LocationList :locations="(locations as Location[])" />
     </div>
     <div v-if="activeLocation" class="__stages">
       <div class="__top">
-        <div class="__back" @click="back()">
+        <button type="button" class="__btn __back" @click="back()">
           &lt; Back
-        </div>
+        </button>
         <div class="__stage">
           {{ activeLocation.name }}
         </div>
         <div><span :class="`fp fp-lg ${activeLocation.countryCode}`"></span></div>
       </div>
 
-      <div class="__heading">
+      <div class="__groupHeading">
         Forward
       </div>
       <StageList :stages="(activeLocation.forward as Stage[])" />
 
-      <div class="__heading">
+      <div class="__groupHeading">
         Reverse
       </div>
       <StageList :stages="(activeLocation.reverse as Stage[])" />
     </div>
-  </div>
+  </aside>
 </template>
 
 <style scoped lang="scss">
 .__trackPanel {
-  background-color: rgba(31, 31, 31, 0.7);
+  background-color: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
   width: 30vw;
-  height: 95vh;
+  max-width: 26rem;
+  height: calc(100vh - 2rem);
   padding: 1rem;
-  margin: 1.5rem 0 1.5rem 1.5rem;
-  color: white;
+  margin: 1rem 0 1rem 1rem;
+  color: var(--fg);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .__locations, .__stages {
-  overflow: scroll;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.__panelTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .__stage {
   text-align: center;
   padding: 0 0.5rem;
+  font-weight: 600;
 }
 
 .__heading {
-  text-align: center;
-  margin-bottom: 1rem;
+  text-align: left;
+  margin: 0;
 }
 
-  .__top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+.__groupHeading {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0.75rem 0 0.4rem;
+}
 
-    .__back {
-      padding: 0.8rem 1rem;
-      font-size: 1rem;
-      white-space: nowrap;
-      border-radius: 0.3rem;
-      background-color: #777777;
+.__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 
-      &:hover {
-        cursor: pointer;
-        background-color: #0045e0;
-      }
-
-      &.__active {
-        background-color: #0045E0;
-      }
-    }
+  .__back {
+    white-space: nowrap;
   }
+}
 
-  .__stats {
-    text-align: center;
-    margin: 1rem 0;
-    padding: 0.8rem 1rem;
-    border-radius: 0.3rem;
-    background-color: #015bb6;
-
-    &:hover {
-      cursor: pointer;
-      background-color: #0045e0;
-    }
-  }
+.__stats {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.75rem;
+}
 
 @media screen and (max-width: 768px) {
   .__trackPanel {
     width: 100%;
+    max-width: none;
     height: 100%;
     margin: 0;
+    border-radius: 0;
+    border: 0;
   }
 }
-
 </style>

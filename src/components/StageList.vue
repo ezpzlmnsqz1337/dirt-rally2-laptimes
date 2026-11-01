@@ -33,23 +33,23 @@ const isActiveStage = (stage: Stage) => {
 
 <template>
   <div class="__wrapper">
-    <div v-for="s in stages" :key="`stage-${s.id}`" class="__item stage" :class="{ __active: isActiveStage(s) }"
+    <button v-for="s in stages" :key="`stage-${s.id}`" type="button" class="__item stage"
+      :class="{ __active: isActiveStage(s) }" :aria-current="isActiveStage(s) ? 'true' : undefined"
       @click="setActiveStage(s)">
-      <div>
-        <div>{{ s.name }}</div>
-        <div>{{ s.lengthKm }}km</div>
-      </div>
-      <div v-if="getTimesForStage(s).length > 0">
+      <span class="__label">
+        <span>{{ s.name }}</span>
+        <span class="__meta">{{ s.lengthKm }} km</span>
+      </span>
+      <span v-if="getTimesForStage(s).length > 0" class="__meta">
         {{ getTimesForStage(s).length }} time(s)
-      </div>
-    </div>
+      </span>
+    </button>
   </div>
 </template>
 
 <style scoped lang="scss">
 .__stage {
-  text-align: center;
-  padding: 0 0.5rem;
+  text-align: left;
 }
 
 .__heading {
@@ -60,20 +60,43 @@ const isActiveStage = (stage: Stage) => {
 .__item {
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
-  padding: 0.8rem 1rem;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  border-radius: 0.3rem;
-  background-color: #777777;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: var(--target-min);
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 0.4rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-raised);
+  cursor: pointer;
+  transition: background-color var(--motion-fast) ease, border-color var(--motion-fast) ease;
 
   &:hover {
-    cursor: pointer;
-    background-color: #0045e0;
+    background-color: var(--line);
+    border-color: var(--line-strong);
   }
 
   &.__active {
-    background-color: #0045E0;
+    border-color: var(--accent);
+    background-color: var(--accent-soft);
   }
+}
+
+.__label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.__meta {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
 }
 </style>

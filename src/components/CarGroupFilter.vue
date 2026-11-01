@@ -32,9 +32,10 @@ const carGroupFilterOptions = computed(() => carGroups.value.map((group) => ({
 
 <template>
   <div class="__wrapper">
-    Group:
-    <v-select class="__select" :options="carGroupFilterOptions" :model-value="carGroupFilter" :searchable="false"
-      :clearable="false" @update:model-value="setCarGroupFilter($event.value)" />
+    <label for="car-group-filter" class="__label">Group</label>
+    <v-select id="car-group-filter" input-id="car-group-filter" class="__select" :options="carGroupFilterOptions"
+      :model-value="carGroupFilter" :searchable="false" :clearable="false"
+      @update:model-value="setCarGroupFilter($event.value)" />
   </div>
 </template>
 
@@ -47,6 +48,25 @@ const carGroupFilterOptions = computed(() => carGroups.value.map((group) => ({
   .__select {
     min-width: 15rem;
     display: inline-block;
+  }
+}
+
+.__label {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media screen and (max-width: 700px) {
+  .__wrapper {
+    width: 100%;
+
+    .__select {
+      min-width: 0;
+      flex: 1;
+    }
   }
 }
 </style>

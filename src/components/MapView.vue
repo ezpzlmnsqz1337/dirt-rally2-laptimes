@@ -80,14 +80,17 @@ const stageMouseout = () => {
   hoverStage.value = null
 }
 
+// Map overlays are not DOM: CSS custom properties cannot reach the Maps API,
+// so the polyline colours repeat the token family literally.
+// active = --accent (#e07a3f), hover = --accent lightened, rest = muted surface tint.
 const getStagePolylineColor = (stage: Stage) => {
   if (activeStage.value && activeStage.value === stage) {
-    return '#0045E0'
+    return '#e07a3f'
   }
   if (hoverStage.value && hoverStage.value === stage) {
-    return '#57a8de'
+    return '#f0a06a'
   }
-  return '#a6d5f5'
+  return '#f0cbb3'
 }
 
 const zoomToLocation = (location: Location) => {

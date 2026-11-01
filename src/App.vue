@@ -41,22 +41,21 @@ onMounted(() => {
 
 <style lang="scss">
 .__app {
-  font-family: 'Inter', sans-serif;
-    color: white;
-    width: 100%;
-    height: 100%;
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--fg);
+  width: 100%;
+  height: 100%;
 
   .__background {
-    font-family: 'Inter', sans-serif;
-    color: white;
     width: 100%;
     height: 100%;
     position: absolute;
+    inset: 0;
   }
 
   .__left {
     position: absolute;
-    transition: left 0.3s;
+    transition: left var(--motion-base) ease;
     left: 0;
     height: 100%;
     z-index: 1;
@@ -64,7 +63,7 @@ onMounted(() => {
 
   .__right {
     position: absolute;
-    transition: right 0.3s;
+    transition: right var(--motion-base) ease;
     right: 0;
     height: 100%;
     z-index: 1;
@@ -74,56 +73,8 @@ onMounted(() => {
     }
   }
 
-  .__btn {
-    border: 0;
-    padding: 0.5rem 1rem;
-    border-radius: 0.3rem;
-    font-size: 1rem;
-    color: white;
-    background-color: #777777;
-
-    &:disabled {
-      color: #d3d3d3;
-      background-color: #999999 !important;
-
-      &:hover {
-        cursor: not-allowed;
-      }
-    }
-
-    &:hover {
-      cursor: pointer;
-      background-color: #0045e0;
-    }
-
-    &.__primary {
-      background-color: #015bb6;
-      color: white;
-      &:hover {
-        cursor: pointer;
-        background-color: #0045e0;
-      }
-    }
-
-    &.__success {
-      background-color: #2da701;
-
-      &:hover {
-        background-color: #006402;
-      }
-    }
-
-    &.__danger {
-      background-color: #e91f1f;
-
-      &:hover {
-        background-color: #d40909;
-      }
-    }
-  }
-
   .__select {
-    color: black;
+    color: var(--fg);
   }
 }
 

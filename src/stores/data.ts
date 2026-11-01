@@ -27,11 +27,22 @@ export const useDataStore = defineStore('data', () => {
   const locationsShow = ref<boolean>(true)
   const stagesShow = ref<boolean>(false)
   const carGroupFilter = ref<string>('Any')
+  const loading = ref<boolean>(true)
+  const loadError = ref<string | null>(null)
 
   const carGroups = computed(() => ['Any', ...new Set(cars.value.map(x => x.group))])
 
   const fetchAll = async () => {
-    await Promise.all([fetchDrivers(), fetchTimes()])
+    loading.value = true
+    loadError.value = null
+    try {
+      await Promise.all([fetchDrivers(), fetchTimes()])
+    } catch (error) {
+      loadError.value = 'Unable to load times. Check the database connection and try again.'
+      console.error('Failed to load laptime data:', error)
+    } finally {
+      loading.value = false
+    }
   }
 
   const fetchDrivers = async () => {
@@ -188,6 +199,8 @@ export const useDataStore = defineStore('data', () => {
     stagesShow: readonly(stagesShow),
     carGroupFilter: readonly(carGroupFilter),
     carGroups,
+    loading: readonly(loading),
+    loadError: readonly(loadError),
     fetchAll,
     fetchDrivers,
     fetchTimes,

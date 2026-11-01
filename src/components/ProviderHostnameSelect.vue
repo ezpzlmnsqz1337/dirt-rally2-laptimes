@@ -37,10 +37,7 @@ const websocketStateText = computed(() => {
 })
 
 const websocketStateClass = computed(() => {
-  return {
-    __connected: websocketState.value === WS_OPEN,
-    __notConnected: websocketState.value !== WS_OPEN
-  }
+  return websocketState.value === WS_OPEN ? '__status-connected' : '__status-disconnected'
 })
 
 const raceStateText = computed(() => {
@@ -48,10 +45,7 @@ const raceStateText = computed(() => {
 })
 
 const raceStateClass = computed(() => {
-  return {
-    __red: inMenu.value,
-    __green: !inMenu.value,
-  }
+  return inMenu.value ? 'race--menu' : 'race--running'
 })
 </script>
 
@@ -61,12 +55,12 @@ const raceStateClass = computed(() => {
     v-if="isLocal()"
     class="__info"
   >
-    <div class="__websocket">
-      <div>
-        <span>Websocket state: </span>
-        <span :class="websocketStateClass">{{ websocketStateText }}</span>
+    <div class="__websocket" role="status">
+        <div>
+          <span class="__label">Websocket</span>
+          <span :class="websocketStateClass">{{ websocketStateText }}</span>
           <div v-if="websocketState === WS_OPEN && raceStateText">
-            <span>Race state: </span>
+            <span class="__label">Race</span>
             <span :class="raceStateClass">{{ raceStateText }}</span>
           </div>
         </div>
@@ -74,9 +68,9 @@ const raceStateClass = computed(() => {
           v-if="websocketState === WS_OPEN"
         class="__disconnect"
       >
-        <div class="__btn __danger" @click="disconnect()">
+        <button type="button" class="__btn __danger" @click="disconnect()">
           Disconnect
-        </div>
+        </button>
       </div>
     </div>
 
@@ -88,16 +82,18 @@ const raceStateClass = computed(() => {
         v-model="host"
         class="__select"
         placeholder="Select websocket provider"
+        aria-label="Websocket provider"
         :options="wsHosts"
         :reduce="(host: any) => host.value"
       />
-      <div
+      <button
+        type="button"
         class="__btn __primary"
         :disabled="!host"
         @click="connect(host, GAME_DATA_PORT)"
       >
         Connect
-      </div>
+      </button>
     </div>
   </div>
 
@@ -106,7 +102,7 @@ const raceStateClass = computed(() => {
     class="__connecting"
   >
     <PulseLoader
-      color="#188cff"
+      color="var(--accent)"
       size="8px"
     />
   </div>
@@ -116,14 +112,17 @@ const raceStateClass = computed(() => {
 <style scoped lang="scss">
 .__connect {
   display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .__info {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 0.3rem;
-  gap: 0.1rem;
+  margin-bottom: 0.75rem;
+  gap: 0.5rem;
   flex-direction: column;
 }
 
@@ -131,27 +130,34 @@ const raceStateClass = computed(() => {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--muted);
 }
 
-.__notConnected {
-  color: red;
+.__label {
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-right: 0.35rem;
 }
 
-.__connected {
-  color: rgb(28, 197, 28);
+.race--menu {
+  color: var(--muted);
 }
 
-.__connect {
-  justify-content: center;
-
-  .__select{
-    min-width: 10rem;
-  }
+.race--running {
+  color: var(--success);
+  font-weight: 600;
 }
 
-.__btn {
-  display: flex;
-  align-items: center;
+.__select{
+  min-width: 10rem;
+}
+
+.__disconnect .__btn {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.75rem;
 }
 </style>
