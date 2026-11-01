@@ -36,7 +36,7 @@ const rows = computed(() => {
 })
 
 const rowLabel = (time: LaptimeWithData) =>
-  `Edit laptime, driver ${time.driver?.name ?? ''}, ${time.time}`
+  `View laptime detail, driver ${time.driver?.name ?? ''}, ${time.time}`
 </script>
 
 <template>

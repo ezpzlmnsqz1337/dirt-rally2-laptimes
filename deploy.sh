@@ -9,6 +9,15 @@ BUILT_LOCALLY=0
 
 START_TIME=$(date +%s)
 
+# Google Maps credentials are inlined into the bundle at build time. Empty
+# values are valid: the app then renders its "map unavailable" placeholder
+# instead of Google's error box.
+MAPS_BUILD_ARGS=(
+    --build-arg "VITE_GOOGLE_MAPS_API_KEY=${VITE_GOOGLE_MAPS_API_KEY:-}"
+    --build-arg "VITE_GOOGLE_MAPS_MAP_ID=${VITE_GOOGLE_MAPS_MAP_ID:-}"
+)
+REMOTE_MAPS_BUILD_ARGS="--build-arg VITE_GOOGLE_MAPS_API_KEY=$(printf '%q' "${VITE_GOOGLE_MAPS_API_KEY:-}") --build-arg VITE_GOOGLE_MAPS_MAP_ID=$(printf '%q' "${VITE_GOOGLE_MAPS_MAP_ID:-}")"
+
 echo ""
 echo "╔══════════════════════════════════════════╗"
 echo "║   🚗 DIRT RALLY 2 LAPTIMES DEPLOYMENT   ║"
@@ -26,7 +35,7 @@ if command -v podman &> /dev/null && podman ps &> /dev/null; then
     echo ""
 
     echo "📦 Building Docker image..."
-    podman build --pull --rm -f 'Dockerfile' -t 'localhost/dirt-rally2-laptimes:latest' '.'
+    podman build --pull --rm "${MAPS_BUILD_ARGS[@]}" -f 'Dockerfile' -t 'localhost/dirt-rally2-laptimes:latest' '.'
     echo "✅ Build complete!"
     echo ""
 
@@ -48,7 +57,7 @@ if command -v podman &> /dev/null && podman ps &> /dev/null; then
     echo ""
 else
     echo "⚠️  No working local Podman — building on $DESTINATION instead."
-    ssh "$DESTINATION" "set -e; cd \"\$HOME/$REMOTE_DIR\"; podman build --pull --rm -f Dockerfile -t localhost/dirt-rally2-laptimes:latest ."
+    ssh "$DESTINATION" "set -e; cd \"\$HOME/$REMOTE_DIR\"; podman build --pull --rm $REMOTE_MAPS_BUILD_ARGS -f Dockerfile -t localhost/dirt-rally2-laptimes:latest ."
     echo "✅ Build complete on homelab!"
     echo ""
 fi

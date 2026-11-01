@@ -9,9 +9,22 @@ import { markerSelected64x64 } from '@/assets/map/icons/base64/rally-marker-sele
 import { apiPromise } from '@/plugins/googleMaps';
 import { useDataStore } from '@/stores/data';
 import { storeToRefs } from 'pinia';
-import { ref, watch } from 'vue';
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
-const gmapMapId: string = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID
+const gmapApiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? ''
+const gmapMapId: string = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID ?? ''
+
+// The map is optional: a build without Maps credentials must degrade to a
+// themed placeholder instead of Google's raw error panel.
+const mapError = ref(!gmapApiKey || !gmapMapId)
+
+const mapApiPromise = apiPromise.catch((error: unknown) => {
+  mapError.value = true
+  console.error('Google Maps failed to load:', error)
+  // Stay pending: the map is unmounted while mapError is set, and rejecting
+  // would only surface the same failure through vue3-google-map.
+  return new Promise<never>(() => undefined)
+})
 
 // store
 const store = useDataStore()
@@ -60,6 +73,18 @@ watch(activeStage, newStage => {
 
 watch(() => mapRef.value?.ready, () => {
   // do map things if needed
+})
+
+// Google calls this hook when the key is rejected (invalid key, referrer or
+// billing restriction) — that is the white error box we must not show.
+onMounted(() => {
+  window.gm_authFailure = () => {
+    mapError.value = true
+  }
+})
+
+onBeforeUnmount(() => {
+  delete window.gm_authFailure
 })
 
 // methods
@@ -128,7 +153,7 @@ const fluentZoom = (zoom: number, speed = 300) => {
 
 <template>
   <div class="__main">
-    <GoogleMap :api-promise="apiPromise" :map-id="gmapMapId" ref="mapRef" :center="center" :zoom="ZOOM_LEVEL_FAR"
+    <GoogleMap v-if="!mapError" :api-promise="mapApiPromise" :map-id="gmapMapId" ref="mapRef" :center="center" :zoom="ZOOM_LEVEL_FAR"
       :disable-default-ui="true" :minZoom="ZOOM_LEVEL_FAR" map-type-id="satellite" class="__map">
       <AdvancedMarker v-for="(l, index) in locations" :key="index" :options="{ position: l.coordinates }"
         @click="markerClick(l as Location)">
@@ -143,13 +168,52 @@ const fluentZoom = (zoom: number, speed = 300) => {
         path: s.coordinates || []
       }" @mouseover="stageMouseover(s)" @mouseout="stageMouseout()" @click="stageClick(s)" />
     </GoogleMap>
+    <div v-else class="__mapFallback">
+      <div class="__mapFallbackPanel" role="status">
+        <strong>Map unavailable — rally list still works, select a location on the left.</strong>
+        <span>Reload the page once the Maps key is configured to try again.</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.__main {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  /* Unconditional: a failed map must never be a blinding white rectangle. */
+  background: var(--canvas);
+}
+
 .__map {
   width: 100vw;
   height: 100vh;
+}
+
+.__mapFallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.__mapFallbackPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 26rem;
+  padding: 1.25rem;
+  background-color: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  color: var(--muted);
+
+  strong {
+    color: var(--fg);
+  }
 }
 
 .__marker-img {

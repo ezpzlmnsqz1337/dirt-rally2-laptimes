@@ -4,6 +4,8 @@ import App from './App.vue'
 import vSelect from 'vue-select';
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import 'vue-select/dist/vue-select.css'
+// Unscoped dark theme for vue-select: must load after the library CSS.
+import './scss/_vselect.scss'
 import 'flagpack/dist/flagpack.css'
 
 const app = createApp(App)

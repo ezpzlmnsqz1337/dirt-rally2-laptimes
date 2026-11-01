@@ -1,0 +1,96 @@
+/* vue-select renders its dropdown menu inside the library's own subtree, so
+   rules written in a scoped component never match it and the library's white
+   default theme wins. This sheet is imported globally in main.ts, after
+   vue-select/dist/vue-select.css, and is the single source of truth for the
+   dark theme of every v-select in the app.
+   Plain, flat CSS on purpose: no nesting, no scope attributes. */
+
+:root {
+  --vs-border-color: var(--line-control);
+  --vs-border-radius: var(--radius-sm);
+
+  --vs-search-input-color: var(--fg);
+  --vs-search-input-placeholder-color: var(--muted);
+
+  --vs-selected-bg: transparent;
+  --vs-selected-border-color: transparent;
+  --vs-selected-color: var(--fg);
+
+  --vs-controls-color: var(--muted);
+
+  --vs-dropdown-bg: var(--surface-raised);
+  --vs-dropdown-color: var(--fg);
+  --vs-dropdown-option-color: var(--fg);
+  --vs-dropdown-option--active-bg: var(--accent);
+  --vs-dropdown-option--active-color: var(--canvas);
+
+  --vs-state-disabled-bg: var(--surface);
+  --vs-state-disabled-color: var(--muted);
+  --vs-state-disabled-controls-color: var(--muted);
+}
+
+.v-select > .vs__dropdown-toggle {
+  color: var(--fg);
+  background-color: var(--surface-raised);
+  border: 1px solid var(--line-control);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.6rem;
+}
+
+.v-select.vs--open > .vs__dropdown-toggle,
+.v-select > .vs__dropdown-toggle:focus-within {
+  border-color: var(--accent);
+}
+
+/* Keep the toggle fully rounded while open: the menu is its own panel. */
+.v-select.vs--open > .vs__dropdown-toggle {
+  border-bottom-left-radius: var(--radius-sm);
+  border-bottom-right-radius: var(--radius-sm);
+}
+
+.vs__dropdown-menu {
+  background-color: var(--surface-raised);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  color: var(--fg);
+}
+
+.vs__dropdown-option {
+  color: var(--fg);
+  padding: 0.5rem 0.75rem;
+}
+
+.vs__dropdown-option--highlight {
+  background-color: var(--accent);
+  color: var(--canvas);
+}
+
+.vs__no-options {
+  color: var(--muted);
+}
+
+.vs__selected {
+  color: var(--fg);
+}
+
+.vs__search,
+.vs__search::placeholder {
+  color: var(--muted);
+  background: transparent;
+}
+
+.vs__actions .vs__clear,
+.vs__actions .vs__open-indicator {
+  fill: var(--muted);
+}
+
+.v-select.vs--disabled .vs__dropdown-toggle {
+  background-color: var(--surface);
+  border-color: var(--line);
+  color: var(--muted);
+}
+
+.v-select.vs--disabled .vs__selected,
+.v-select.vs--disabled .vs__search {
+  color: var(--muted);
+}

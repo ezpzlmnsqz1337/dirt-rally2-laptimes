@@ -7,11 +7,12 @@ import TimeTable from '@/components/TimeTable.vue';
 import AddLaptimeModal from '@/components/modals/AddLaptimeModal.vue';
 import AddDriverModal from '@/components/modals/AddDriverModal.vue';
 import EditLaptimeModal from '@/components/modals/EditLaptimeModal.vue';
+import LaptimeDetailModal from '@/components/modals/LaptimeDetailModal.vue';
 
 import { ref } from 'vue';
 import type { LaptimeWithData } from '@/model/LaptimeWithData';
 
-type ModalType = 'add-driver' | 'add-laptime' | 'edit-laptime';
+type ModalType = 'add-driver' | 'add-laptime' | 'edit-laptime' | 'detail';
 
 // store
 const store = useDataStore()
@@ -35,11 +36,19 @@ const close = () => {
   setActiveStage(null)
 }
 const laptimeToEdit = ref<LaptimeWithData | undefined>(undefined)
+const laptimeToDetail = ref<LaptimeWithData | undefined>(undefined)
 const modals = ref<ModalType[]>([])
 
+// Row click always opens the read-only detail; editing is a second step and
+// stays gated behind isLocal() inside the modal.
 const onRowClicked = (laptime: LaptimeWithData) => {
-  if (!isLocal()) { return }
-  laptimeToEdit.value = laptime
+  laptimeToDetail.value = laptime
+  showModal('detail')
+}
+
+const editFromDetail = () => {
+  if (!laptimeToDetail.value) { return }
+  laptimeToEdit.value = laptimeToDetail.value
   showModal('edit-laptime')
 }
 
@@ -53,6 +62,13 @@ const showModal = (modal: ModalType) => {
 
 const closeModal = () => {
   modals.value.pop()
+}
+
+// An edit opened from the detail view returns to the table: the detail modal
+// holds a pre-edit snapshot and would otherwise show stale data.
+const closeEditModal = () => {
+  closeModal()
+  if (isModalActive('detail')) { closeModal() }
 }
 
 </script>
@@ -81,7 +97,7 @@ const closeModal = () => {
           <button type="button" class="__btn" @click="fetchAll()">Retry</button>
         </div>
         <TimeTable v-else :times="getTimesForStage(activeStage)" :group="carGroupFilter" :loading="loading"
-          :interactive="isLocal()" @row-clicked="onRowClicked($event)" />
+          @row-clicked="onRowClicked($event)" />
       </div>
     </div>
     <div v-else class="__state" role="status">
@@ -92,8 +108,10 @@ const closeModal = () => {
     <AddLaptimeModal v-show="isModalActive('add-laptime')" :active="isModalActive('add-laptime')"
       @close="closeModal()" @show-add-driver-modal="showModal('add-driver')" />
     <AddDriverModal v-show="isModalActive('add-driver')" :active="isModalActive('add-driver')" @close="closeModal()" />
-    <EditLaptimeModal v-if="isModalActive('edit-laptime')" @close="closeModal()"
+    <EditLaptimeModal v-if="isModalActive('edit-laptime')" @close="closeEditModal()"
       @show-add-driver-modal="showModal('add-driver')" :laptime="laptimeToEdit" />
+    <LaptimeDetailModal v-if="isModalActive('detail') && laptimeToDetail" :laptime="laptimeToDetail"
+      @close="closeModal()" @show-edit="editFromDetail()" />
   </aside>
 </template>
 
