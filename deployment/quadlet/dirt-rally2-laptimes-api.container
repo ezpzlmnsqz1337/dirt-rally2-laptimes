@@ -8,7 +8,8 @@ ContainerName=dirt-rally2-laptimes-api
 Image=docker.io/postgrest/postgrest:latest
 PodmanArgs=--memory=128m
 Pod=dirt-rally2-laptimes.pod
-Environment=PGRST_DB_URI=postgres://postgres:MyPass4Pos12_@localhost:5432/postgres
+Secret=pg_dirt2_api_uri
+Environment=PGRST_DB_URI=@/run/secrets/pg_dirt2_api_uri
 Environment=PGRST_DB_SCHEMA=public
 Environment=PGRST_DB_ANON_ROLE=postgres
 Environment=PGRST_DB_CHANNEL_ENABLED=false

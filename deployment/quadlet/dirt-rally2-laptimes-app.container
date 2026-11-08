@@ -6,6 +6,11 @@ ContainerName=dirt-rally2-laptimes-app
 Image=localhost/dirt-rally2-laptimes:latest
 PodmanArgs=--memory=256m
 Pod=dirt-rally2-laptimes.pod
+HealthCmd=curl -fsS http://127.0.0.1:80/
+HealthInterval=30s
+HealthRetries=3
+HealthStartPeriod=30s
+HealthOnFailure=restart
 
 [Service]
 Restart=always
